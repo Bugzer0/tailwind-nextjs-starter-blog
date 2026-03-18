@@ -1,4 +1,5 @@
 import Link from '@/components/Link'
+import Image from '@/components/Image'
 import Tag from '@/components/Tag'
 import siteMetadata from '@/data/siteMetadata'
 import { formatDate } from 'pliny/utils/formatDate'
@@ -10,29 +11,51 @@ export default function Home({ posts }) {
   return (
     <>
       <div className="divide-y divide-gray-200 dark:divide-gray-700">
-        <div className="space-y-2 pt-6 pb-8 md:space-y-5">
-          <h1 className="text-3xl leading-9 font-extrabold tracking-tight text-gray-900 sm:text-4xl sm:leading-10 md:text-6xl md:leading-14 dark:text-gray-100">
-            Latest
-          </h1>
-          <p className="text-lg leading-7 text-gray-500 dark:text-gray-400">
-            {siteMetadata.description}
-          </p>
+        <div className="flex flex-col items-center gap-x-12 xl:flex-row">
+          <div className="space-y-2">
+            <h1 className="text-3xl leading-9 font-extrabold tracking-tight text-gray-900 sm:text-4xl sm:leading-10 md:text-6xl md:leading-14 dark:text-gray-100">
+              Latest
+            </h1>
+            <p className="text-lg leading-7 text-gray-500 dark:text-gray-400">
+              Latest blog posts, tips & tricks, tutorials and more!
+              <br />
+              Please subscribe to the newsletter to get the latest updates.
+            </p>
+          </div>
+          {siteMetadata.newsletter?.provider && (
+            <div className="mx-2 my-12 flex w-[288px] items-center justify-center sm:w-[400px] md:w-[550px]">
+              <div className="flex items-center justify-center">
+                <NewsletterForm title="Stay updated, receive the latest post straight to your mailbox" />
+              </div>
+            </div>
+          )}
         </div>
         <ul className="divide-y divide-gray-200 dark:divide-gray-700">
           {!posts.length && 'No posts found.'}
           {posts.slice(0, MAX_DISPLAY).map((post) => {
-            const { slug, date, title, summary, tags } = post
+            const { slug, date, title, summary, tags, images } = post
             return (
               <li key={slug} className="py-12">
                 <article>
-                  <div className="space-y-2 xl:grid xl:grid-cols-4 xl:items-baseline xl:space-y-0">
-                    <dl>
+                  <div className="space-y-2 xl:grid xl:grid-cols-4 xl:space-y-0">
+                    <dl className="hidden items-baseline xl:col-start-1 xl:row-start-1 xl:flex">
                       <dt className="sr-only">Published on</dt>
                       <dd className="text-base leading-6 font-medium text-gray-500 dark:text-gray-400">
-                        <time dateTime={date}>{formatDate(date, siteMetadata.locale)}</time>
+                        <Link href={`/blog/${slug}`} aria-label={`Read "${title}"`}>
+                          {images && (
+                            <Image
+                              src={images[0]}
+                              alt={title}
+                              className="thumbnail-image"
+                              width="220"
+                              height="220"
+                              quality="95"
+                            />
+                          )}
+                        </Link>
                       </dd>
                     </dl>
-                    <div className="space-y-5 xl:col-span-3">
+                    <div className="flex flex-col items-baseline space-y-5 xl:col-span-3">
                       <div className="space-y-6">
                         <div>
                           <h2 className="text-2xl leading-8 font-bold tracking-tight">
@@ -43,6 +66,9 @@ export default function Home({ posts }) {
                               {title}
                             </Link>
                           </h2>
+                          <div className="mb-2 text-base leading-6 font-medium text-gray-500 dark:text-gray-400">
+                            <time dateTime={date}>{formatDate(date, siteMetadata.locale)}</time>
+                          </div>
                           <div className="flex flex-wrap">
                             {tags.map((tag) => (
                               <Tag key={tag} text={tag} />
@@ -79,11 +105,6 @@ export default function Home({ posts }) {
           >
             All Posts &rarr;
           </Link>
-        </div>
-      )}
-      {siteMetadata.newsletter?.provider && (
-        <div className="flex items-center justify-center pt-4">
-          <NewsletterForm />
         </div>
       )}
     </>
