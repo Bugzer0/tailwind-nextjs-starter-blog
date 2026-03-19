@@ -18,7 +18,7 @@ const dictionary = {
   home: {
     latestPosts: 'Latest Posts',
     description:
-      'Knowledge about blood glucose management, diabetes, CGM, and metabolic health.',
+      'Glucose, diabetes, CGM, and metabolic health knowledge.',
     newsletterTitle: 'Get new health articles delivered to your inbox',
     noPosts: 'No posts yet.',
     readMore: 'Read more',
@@ -105,6 +105,13 @@ const dictionary = {
     message: "Sorry we couldn't find this page.",
     description: 'But dont worry, you can find plenty of other things on our homepage.',
     backHome: 'Back to homepage',
+  },
+
+  // App banner
+  appBanner: {
+    title: 'GlucoAI — Smart Blood Sugar Monitor',
+    description: 'Track, analyze, and optimize your glucose levels with AI-powered insights.',
+    download: 'Download on App Store',
   },
 
   // Footer

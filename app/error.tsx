@@ -24,9 +24,7 @@ export default function Error({
         <h2 className="mb-4 text-3xl font-bold text-gray-900 dark:text-gray-100">
           {dictionary.error.somethingWentWrong}
         </h2>
-        <p className="mb-6 text-gray-600 dark:text-gray-400">
-          {dictionary.error.errorDescription}
-        </p>
+        <p className="mb-6 text-gray-600 dark:text-gray-400">{dictionary.error.errorDescription}</p>
         {error.digest && (
           <p className="mb-6 text-sm text-gray-500 dark:text-gray-500">
             {dictionary.error.errorId}: {error.digest}

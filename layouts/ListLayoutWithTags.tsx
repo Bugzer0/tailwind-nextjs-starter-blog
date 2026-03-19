@@ -11,6 +11,7 @@ import siteMetadata from '@/data/siteMetadata'
 import dictionary from '@/data/dictionary'
 import tagData from 'app/tag-data.json'
 import Image from '@/components/Image'
+import AppBanner from '@/components/AppBanner'
 
 interface PaginationProps {
   totalPages: number
@@ -176,6 +177,7 @@ export default function ListLayoutWithTags({
             {pagination && pagination.totalPages > 1 && (
               <Pagination currentPage={pagination.currentPage} totalPages={pagination.totalPages} />
             )}
+            <AppBanner />
           </div>
         </div>
       </div>

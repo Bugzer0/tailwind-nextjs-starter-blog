@@ -1,3 +1,4 @@
+import AppBanner from '@/components/AppBanner'
 import Link from '@/components/Link'
 import Image from '@/components/Image'
 import Tag from '@/components/Tag'
@@ -17,13 +18,13 @@ interface HomeProps {
 export default function Home({ posts }: HomeProps) {
   return (
     <>
-      <div className="divide-y divide-gray-200 dark:divide-gray-700">
+      <div className="space-y-2 pb-6">
         <div className="flex flex-col items-center gap-x-12 xl:flex-row">
           <div className="space-y-2">
-            <h1 className="text-3xl leading-9 font-extrabold tracking-tight text-gray-900 sm:text-4xl sm:leading-10 md:text-6xl md:leading-14 dark:text-gray-100">
+            <h1 className="text-2xl leading-8 font-extrabold tracking-tight text-gray-900 sm:text-3xl sm:leading-9 md:text-4xl md:leading-10 dark:text-gray-100">
               {dictionary.home.latestPosts}
             </h1>
-            <p className="text-lg leading-7 text-gray-500 dark:text-gray-400">
+            <p className="truncate text-lg leading-7 text-gray-500 dark:text-gray-400">
               {dictionary.home.description}
             </p>
           </div>
@@ -35,6 +36,9 @@ export default function Home({ posts }: HomeProps) {
             </div>
           )}
         </div>
+      </div>
+      <AppBanner />
+      <div className="divide-y divide-gray-200 dark:divide-gray-700">
         <ul className="divide-y divide-gray-200 dark:divide-gray-700">
           {!posts.length && dictionary.home.noPosts}
           {posts.slice(0, MAX_DISPLAY).map((post) => {

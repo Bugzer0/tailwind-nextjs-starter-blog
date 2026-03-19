@@ -32,7 +32,9 @@ export default function Footer() {
           <div>{` • `}</div>
           <Link href="/terms">{dictionary.footer.termsOfService}</Link>
         </div>
-        <div className="mb-8 text-sm text-gray-500 dark:text-gray-400">{dictionary.footer.allRightsReserved}</div>
+        <div className="mb-8 text-sm text-gray-500 dark:text-gray-400">
+          {dictionary.footer.allRightsReserved}
+        </div>
       </div>
     </footer>
   )

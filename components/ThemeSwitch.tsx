@@ -2,7 +2,15 @@
 
 import { Fragment, useEffect, useState } from 'react'
 import { useTheme } from 'next-themes'
-import { Menu, MenuButton, MenuItem, MenuItems, Radio, RadioGroup, Transition } from '@headlessui/react'
+import {
+  Menu,
+  MenuButton,
+  MenuItem,
+  MenuItems,
+  Radio,
+  RadioGroup,
+  Transition,
+} from '@headlessui/react'
 import dictionary from '@/data/dictionary'
 
 const Sun = () => (
