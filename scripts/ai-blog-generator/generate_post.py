@@ -134,7 +134,7 @@ Rules:
 - Do NOT wrap in JSON or code fences
 - Use ## for main sections and ### for subsections
 - Include code examples where relevant (use proper markdown code blocks)
-- Place exactly one line containing only {{INLINE_IMAGE}} where an illustration would help
+- Place exactly one line containing only <!-- INLINE_IMAGE --> where an illustration would help
 - Start directly with the introduction paragraph (no title heading)
 - Minimum 800 words""",
             temperature=0.8,
@@ -210,9 +210,9 @@ def create_blog_post(metadata: dict, content: str, slug_name: str, images_genera
         images_list.append(f"{image_dir}/banner.jpg")
 
     # Process content - replace inline image placeholder
-    if images_generated.get("inline") and "{INLINE_IMAGE}" in content:
+    if images_generated.get("inline") and "<!-- INLINE_IMAGE -->" in content:
         inline_img = f"\n![illustration]({image_dir}/inline.jpg)\n"
-        content = content.replace("{INLINE_IMAGE}", inline_img)
+        content = content.replace("<!-- INLINE_IMAGE -->", inline_img)
     elif images_generated.get("inline"):
         lines = content.split("\n")
         inserted = False
@@ -224,6 +224,10 @@ def create_blog_post(metadata: dict, content: str, slug_name: str, images_genera
                 break
         if inserted:
             content = "\n".join(lines)
+
+    # Always remove any leftover placeholders to prevent MDX/JSX parse errors
+    content = content.replace("<!-- INLINE_IMAGE -->", "")
+    content = content.replace("{INLINE_IMAGE}", "")
 
     safe_title = sanitize_yaml_string(metadata["title"])
     safe_summary = sanitize_yaml_string(metadata["summary"])
