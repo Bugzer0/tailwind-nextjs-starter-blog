@@ -20,24 +20,24 @@ export default function Home({ posts }: HomeProps) {
         <div className="flex flex-col items-center gap-x-12 xl:flex-row">
           <div className="space-y-2">
             <h1 className="text-3xl leading-9 font-extrabold tracking-tight text-gray-900 sm:text-4xl sm:leading-10 md:text-6xl md:leading-14 dark:text-gray-100">
-              Latest
+              Bài Viết Mới Nhất
             </h1>
             <p className="text-lg leading-7 text-gray-500 dark:text-gray-400">
-              Latest blog posts, tips & tricks, tutorials and more!
+              Kiến thức về quản lý đường huyết, tiểu đường, CGM và sức khỏe chuyển hóa.
               <br />
-              Please subscribe to the newsletter to get the latest updates.
+              Đăng ký nhận bài viết mới qua email để cập nhật kiến thức sức khỏe.
             </p>
           </div>
           {siteMetadata.newsletter?.provider && (
             <div className="mx-2 my-12 flex w-[288px] items-center justify-center sm:w-[400px] md:w-[550px]">
               <div className="flex items-center justify-center">
-                <NewsletterForm title="Stay updated, receive the latest post straight to your mailbox" />
+                <NewsletterForm title="Nhận bài viết mới về sức khỏe qua email" />
               </div>
             </div>
           )}
         </div>
         <ul className="divide-y divide-gray-200 dark:divide-gray-700">
-          {!posts.length && 'No posts found.'}
+          {!posts.length && 'Chưa có bài viết nào.'}
           {posts.slice(0, MAX_DISPLAY).map((post) => {
             const { slug, date, title, summary, tags, images } = post
             return (
@@ -93,7 +93,7 @@ export default function Home({ posts }: HomeProps) {
                           className="text-primary-500 hover:text-primary-600 dark:hover:text-primary-400"
                           aria-label={`Read more: "${title}"`}
                         >
-                          Read more &rarr;
+                          Đọc thêm &rarr;
                         </Link>
                       </div>
                     </div>
@@ -111,7 +111,7 @@ export default function Home({ posts }: HomeProps) {
             className="text-primary-500 hover:text-primary-600 dark:hover:text-primary-400"
             aria-label="All posts"
           >
-            All Posts &rarr;
+            Tất cả bài viết &rarr;
           </Link>
         </div>
       )}

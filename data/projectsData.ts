@@ -7,18 +7,16 @@ interface Project {
 
 const projectsData: Project[] = [
   {
-    title: 'Apache SkyWalking',
-    description: `Apache Skywalking is an application performance monitor tool for distributed systems, especially designed for microservices, cloud native and container-based (Kubernetes) architectures.
-As a core maintainer of Apache SkyWalking, I help to manage the project and contribute to the codebase in various ways, including developing features, fixing bugs, evolving the CI infrastructure, initiating sub projects and more.`,
-    imgSrc: '/static/images/skywalking-logo.png',
-    href: 'https://skywalking.apache.org',
+    title: 'GlucoAI App',
+    description: `Ứng dụng quản lý đường huyết thông minh với AI, giúp người tiểu đường theo dõi chỉ số glucose, A1C, insulin và dinh dưỡng. Tích hợp với các thiết bị CGM phổ biến như Dexcom, FreeStyle Libre. Phân tích xu hướng và đưa ra gợi ý cá nhân hóa để kiểm soát đường huyết tốt hơn.`,
+    imgSrc: '/static/images/glucoai-app-logo.png',
+    href: 'https://apps.apple.com/app/glucoai',
   },
   {
-    title: 'Message AI',
-    description: `Message AI is a conversational AI application for macOS, iOS, and iPadOS that allows you to chat with AI models, including ChatGPT, Stable Diffusion and Text-to-Speech models.
-As the author of Message AI, I designed and developed the application from scratch, including the UI/UX, the backend API, and the integration with AI models.`,
-    imgSrc: '/static/images/message-ai-logo.png',
-    href: 'https://apps.apple.com/app/message-ai/id6448740961',
+    title: 'Blog về Sức khỏe Chuyển hóa',
+    description: `Blog chia sẻ kiến thức chuyên sâu về quản lý tiểu đường, dinh dưỡng, công nghệ CGM, và lối sống lành mạnh. Cập nhật hàng ngày với các bài viết từ chuyên gia, review ứng dụng, hướng dẫn thực hành và câu chuyện thành công từ cộng đồng.`,
+    imgSrc: '/static/images/blog-logo.png',
+    href: 'https://glucoai.app/blog',
   },
 ]
 

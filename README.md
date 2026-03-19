@@ -1,6 +1,12 @@
-![tailwind-nextjs-banner](/public/static/images/twitter-card.png)
+![glucoai-blog-banner](/public/static/images/twitter-card.png)
 
-# Tailwind Nextjs Starter Blog
+# GlucoAI Blog — Glucose & Diabetes Health
+
+Blog chia sẻ kiến thức về quản lý đường huyết, tiểu đường, công nghệ CGM và sức khỏe chuyển hóa.
+
+## Tech Stack
+
+Based on [Tailwind Nextjs Starter Blog](https://github.com/timlrx/tailwind-nextjs-starter-blog)
 
 [![GitHub Repo stars](https://img.shields.io/github/stars/timlrx/tailwind-nextjs-starter-blog?style=social)](https://GitHub.com/timlrx/tailwind-nextjs-starter-blog/stargazers/)
 [![GitHub forks](https://img.shields.io/github/forks/timlrx/tailwind-nextjs-starter-blog?style=social)](https://github.com/timlrx/tailwind-nextjs-starter-blog/forks)

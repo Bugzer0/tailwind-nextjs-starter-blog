@@ -1,20 +1,27 @@
-# Hướng dẫn triển khai AI Blog Generator với GitHub Actions
+# Hướng dẫn triển khai AI Blog Generator — Glucose & Diabetes Health
 
 ## Tổng quan
 
-Hệ thống tự động viết bài blog bằng Gemini AI, bao gồm:
-- Tạo nội dung bài viết (MDX) bằng Gemini 2.5 Flash
-- Tạo ảnh banner + ảnh inline bằng Gemini 2.0 Flash
+Hệ thống tự động viết bài blog về **glucose, tiểu đường, và sức khỏe chuyển hóa** bằng Gemini AI:
+- **Tự động chọn topic**: AI rà soát bài cũ, tự sinh chủ đề mới không trùng lặp
+- **Tạo nội dung** (MDX) bằng Gemini 2.0 Flash — viết bằng tiếng Việt
+- **Tạo ảnh** banner + inline bằng Gemini 2.0 Flash Image
 - Tự động commit và push lên GitHub
 - Workflow `pages.yml` hiện tại sẽ tự deploy khi có push vào `main`
+
+### Tính năng chính
+- **Không cần file topics.txt** — chỉ cần bấm "Run workflow" là có bài mới
+- **Duplicate check** — scan tất cả bài viết hiện có trước khi viết
+- **SEO-optimized** — title, summary, tags theo chuẩn SEO
+- **Brand voice** — giọng văn thân thiện, giáo dục, đáng tin cậy
+- **CTA tự nhiên** — gợi ý app quản lý đường huyết không aggressive
 
 ## Cấu trúc file
 
 ```
 scripts/ai-blog-generator/
-├── generate_post.py      # Script chính
-├── SKILL.md              # Hướng dẫn phong cách viết cho AI
-├── topics.txt            # Danh sách chủ đề cho chế độ tự động
+├── generate_post.py      # Script chính (auto-topic + duplicate check)
+├── SKILL.md              # Brand voice, content strategy, templates
 └── requirements.txt      # Python dependencies
 
 .github/workflows/
@@ -68,12 +75,14 @@ git push origin main
 ## Bước 5: Chạy thử (Manual)
 
 1. Vào GitHub repo → tab **"Actions"**
-2. Sidebar trái → chọn **"Generate AI Blog Post"**
+2. Sidebar trái → chọn **"Generate AI Blog Post — Glucose & Diabetes Health"**
 3. Click **"Run workflow"**
-4. Nhập chủ đề bài viết, ví dụ:
-   ```
-   Hướng dẫn sử dụng Docker Compose cho dự án Next.js
-   ```
+4. Có 2 cách:
+   - **Để trống topic** → AI tự động chọn chủ đề mới (không trùng bài cũ)
+   - **Nhập topic cụ thể**, ví dụ:
+     ```
+     Hướng dẫn đọc hiểu chỉ số A1C cho người mới
+     ```
 5. Click **"Run workflow"** (nút xanh)
 6. Đợi workflow chạy xong (~2-5 phút)
 7. Kiểm tra kết quả:
@@ -120,65 +129,53 @@ on:
   #   - cron: '0 1 * * 1'
 ```
 
-### Quản lý danh sách chủ đề tự động
+### Chế độ tự động (không cần topics.txt)
 
-Khi chạy theo schedule, workflow sẽ random 1 chủ đề từ `scripts/ai-blog-generator/topics.txt`.
+Khi chạy theo schedule hoặc không nhập topic, AI sẽ:
+1. **Scan** tất cả bài viết hiện có trong `data/blog/`
+2. **Phân tích** title, tags, summary của từng bài
+3. **Tự sinh** chủ đề mới về glucose/tiểu đường không trùng lặp
+4. **Chọn content type** phù hợp (how-to, review, listicle, myth-busting, case study, beginner's guide)
 
-Sửa file này để thêm/bớt chủ đề:
-
-```
-Hướng dẫn sử dụng Docker Compose cho dự án Next.js
-So sánh Bun vs Node.js - Khi nào nên dùng cái nào
-Tối ưu performance cho React Server Components
-```
-
-Mỗi dòng là 1 chủ đề. Dòng trống sẽ bị bỏ qua.
+Không cần quản lý file chủ đề thủ công.
 
 ## Bước 7: Tùy chỉnh phong cách viết (SKILL.md)
 
-File `scripts/ai-blog-generator/SKILL.md` là "skill" hướng dẫn AI cách viết bài.
+File `scripts/ai-blog-generator/SKILL.md` chứa toàn bộ chiến lược nội dung:
 
-Bạn có thể tùy chỉnh:
-- Phong cách viết (formal/casual, ngôn ngữ)
-- Cấu trúc bài viết (số heading, độ dài)
-- Quy tắc nội dung (có code example không, tags nào)
-- Yêu cầu đặc biệt (luôn viết tiếng Việt, thêm emoji, v.v.)
+- **Brand Voice**: The Guide + The Friend — thân thiện, giáo dục, đáng tin cậy
+- **Content Pillars**: Educational (40%), Practical (30%), Inspirational (20%), Promotional (10%)
+- **CTA Strategy**: Problem→Solution→Tool, Personal Experience, Comparison
+- **Content Types**: How-To, App Review, Listicle, Myth Busting, Case Study, Beginner's Guide
+- **SEO Guidelines**: keyword placement, title length, summary format
+- **Tags**: glucose, diabetes, cgm, a1c, insulin, blood-sugar, nutrition, app-review, etc.
 
-Ví dụ thêm rule viết tiếng Việt:
-
-```markdown
-## Language
-- Always write in Vietnamese
-- Use Vietnamese technical terms where possible, keep English for code/library names
-```
+Tất cả nội dung viết bằng **tiếng Việt**, tập trung vào glucose monitoring và diabetes management.
 
 ## Luồng hoạt động chi tiết
 
 ```
-┌─────────────────────────────────────────────────────┐
-│                  GitHub Actions                      │
-│                                                      │
-│  1. Trigger (manual hoặc schedule)                   │
-│         │                                            │
-│         ▼                                            │
-│  2. Resolve topic                                    │
-│     ├─ Manual: dùng input từ user                    │
-│     └─ Schedule: random từ topics.txt                │
-│         │                                            │
-│         ▼                                            │
-│  3. generate_post.py                                 │
-│     ├─ Gọi Gemini 2.5 Flash → viết nội dung (JSON)  │
-│     ├─ Gọi Gemini 2.0 Flash → tạo banner.jpg        │
-│     ├─ Gọi Gemini 2.0 Flash → tạo inline.jpg        │
-│     └─ Tạo file MDX với frontmatter + content        │
-│         │                                            │
-│         ▼                                            │
-│  4. Git commit + push                                │
-│         │                                            │
-│         ▼                                            │
-│  5. Trigger pages.yml → build & deploy               │
-│                                                      │
-└─────────────────────────────────────────────────────┘
+┌──────────────────────────────────────────────────────────┐
+│                    GitHub Actions                         │
+│                                                           │
+│  1. Trigger (manual hoặc schedule)                        │
+│         │                                                 │
+│         ▼                                                 │
+│  2. generate_post.py                                      │
+│     ├─ Step 0: Scan data/blog/*.mdx → lấy title/tags     │
+│     ├─ Step 1: AI tự chọn topic mới (nếu không nhập)     │
+│     ├─ Step 2: Gemini → metadata (title, summary, tags)   │
+│     ├─ Step 3: Gemini → nội dung tiếng Việt (markdown)    │
+│     ├─ Step 4: Gemini → banner.jpg + inline.jpg           │
+│     └─ Step 5: Tạo file MDX với frontmatter + content     │
+│         │                                                 │
+│         ▼                                                 │
+│  3. Git commit + push                                     │
+│         │                                                 │
+│         ▼                                                 │
+│  4. Trigger pages.yml → build & deploy                    │
+│                                                           │
+└──────────────────────────────────────────────────────────┘
 ```
 
 ## Output
@@ -219,7 +216,7 @@ Tiếp tục nội dung...
 | `Permission denied` khi push | Workflow permissions | Xem Bước 3 |
 | `Image generation failed` | Gemini safety filter block ảnh | Sửa image prompt trong SKILL.md cho phù hợp hơn |
 | `Failed to parse JSON` | Gemini trả response không đúng format | Chạy lại, hoặc sửa system prompt |
-| `No topic provided` | Schedule chạy nhưng topics.txt trống | Thêm chủ đề vào topics.txt |
+| `AI returned empty topic` | Gemini không sinh được topic | Chạy lại, hoặc set BLOG_TOPIC thủ công |
 | Workflow timeout (>10 phút) | API quá chậm hoặc treo | Kiểm tra Gemini API status |
 
 ## Giới hạn và lưu ý
