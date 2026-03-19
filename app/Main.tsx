@@ -24,8 +24,6 @@ export default function Home({ posts }: HomeProps) {
             </h1>
             <p className="text-lg leading-7 text-gray-500 dark:text-gray-400">
               Kiến thức về quản lý đường huyết, tiểu đường, CGM và sức khỏe chuyển hóa.
-              <br />
-              Đăng ký nhận bài viết mới qua email để cập nhật kiến thức sức khỏe.
             </p>
           </div>
           {siteMetadata.newsletter?.provider && (
