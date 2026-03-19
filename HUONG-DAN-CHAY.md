@@ -11,6 +11,7 @@
 ## ⚡ Quick Start (Nhanh nhất)
 
 ### 1. Cài đặt dependencies
+
 ```bash
 # Sử dụng yarn (khuyến nghị)
 yarn install
@@ -20,6 +21,7 @@ npm install
 ```
 
 ### 2. Chạy development server
+
 ```bash
 # Development mode với hot reload
 yarn dev
@@ -29,6 +31,7 @@ npm run dev
 ```
 
 ### 3. Mở trình duyệt
+
 👉 [http://localhost:3000](http://localhost:3000)
 
 ---
@@ -53,7 +56,9 @@ yarn build:debug      # Build với debug info
 ## 🔧 Cấu hình ban đầu
 
 ### 1. Cấu hình site metadata
+
 File: `data/siteMetadata.js`
+
 ```javascript
 export const siteMetadata = {
   title: 'Tên Blog Của Bạn',
@@ -65,7 +70,9 @@ export const siteMetadata = {
 ```
 
 ### 2. Cấu hình navigation
+
 File: `data/headerNavLinks.js`
+
 ```javascript
 const headerNavLinks = [
   { title: 'Blog', href: '/blog' },
@@ -76,7 +83,9 @@ const headerNavLinks = [
 ```
 
 ### 3. Cấu hình tác giả
+
 File: `data/authors/default.md`
+
 ```markdown
 ---
 name: Tên Của Bạn
@@ -115,8 +124,10 @@ github: 'https://github.com/username'
 ## 📝 Viết bài blog mới
 
 ### 1. Tạo file markdown mới
+
 File: `data/blog/ten-bai-viet.md`
-```markdown
+
+````markdown
 ---
 title: 'Tiêu Đề Bài Viết'
 date: '2024-03-19'
@@ -133,19 +144,21 @@ Nội dung bài viết của bạn ở đây...
 ## Cú pháp Markdown hỗ trợ
 
 - **Bold text**
-- *Italic text*
+- _Italic text_
 - `Inline code`
 
 ```javascript
 // Code block với syntax highlighting
-const hello = 'world';
+const hello = 'world'
 ```
+````
 
 > Quote block
 
 - [Link](/blog/other-post)
 - ![Image](/static/images/image.jpg)
-```
+
+````
 
 ### 2. Frontmatter fields hỗ trợ
 
@@ -174,10 +187,12 @@ theme: {
     },
   },
 },
-```
+````
 
 ### 2. Tùy chỉnh CSS
+
 File: `styles/globals.css`
+
 ```css
 /* Custom styles here */
 .custom-class {
@@ -190,10 +205,12 @@ File: `styles/globals.css`
 ## 🔍 Tìm kiếm và SEO
 
 ### 1. Tìm kiếm (Kbar)
+
 - Tự động index tất cả blog posts
 - Sử dụng `Ctrl+K` hoặc `Cmd+K` để mở
 
 ### 2. SEO optimization
+
 - Tự động tạo sitemap: `/sitemap.xml`
 - Tự động tạo RSS feed: `/feed.xml`
 - Robots.txt: `/robots.txt`
@@ -203,6 +220,7 @@ File: `styles/globals.css`
 ## 📱 Testing
 
 ### 1. Lighthouse score
+
 ```bash
 # Build và kiểm tra performance
 yarn build
@@ -212,6 +230,7 @@ yarn start
 ```
 
 ### 2. Responsive testing
+
 - Test trên các kích thước màn hình khác nhau
 - Kiểm tra mobile view
 
@@ -219,7 +238,29 @@ yarn start
 
 ## 🚀 Deploy
 
-### 1. Vercel (Khuyến nghị)
+### 1. Cloudflare Pages (Khuyến nghị - Miễn phí & Nhanh)
+
+**Ưu điểm:**
+
+- ✅ Global CDN (200+ locations)
+- ✅ Tự động deploy khi push GitHub
+- ✅ Unlimited requests
+- ✅ SSL miễn phí
+- ✅ 100GB bandwidth/tháng
+
+**Quick Setup:**
+
+1. Push code lên GitHub
+2. Kết nối repo với Cloudflare Pages
+3. Cấu hình build:
+   - Build command: `yarn build`
+   - Output directory: `out`
+   - Environment variables: `EXPORT=1`, `UNOPTIMIZED=1`
+
+📖 **[Xem hướng dẫn chi tiết](./CLOUDFLARE-DEPLOY.md)**
+
+### 2. Vercel
+
 ```bash
 # Install Vercel CLI
 npm i -g vercel
@@ -231,7 +272,8 @@ vercel
 vercel --prod
 ```
 
-### 2. GitHub Pages
+### 3. GitHub Pages
+
 ```bash
 # Build static
 EXPORT=1 UNOPTIMIZED=1 yarn build
@@ -239,7 +281,8 @@ EXPORT=1 UNOPTIMIZED=1 yarn build
 # Deploy folder `out`
 ```
 
-### 3. Netlify
+### 4. Netlify
+
 - Connect repo trên Netlify
 - Build command: `yarn build`
 - Publish directory: `.next`
@@ -251,12 +294,14 @@ EXPORT=1 UNOPTIMIZED=1 yarn build
 ### Common Issues
 
 **1. Port 3000 đang được sử dụng**
+
 ```bash
 # Sử dụng port khác
 yarn dev -p 3001
 ```
 
 **2. Lỗi TypeScript**
+
 ```bash
 # Kiểm tra types
 yarn build
@@ -266,6 +311,7 @@ yarn lint --fix
 ```
 
 **3. Build lỗi trên Windows**
+
 ```bash
 # Set environment variable
 $env:PWD = $(Get-Location).Path
@@ -273,6 +319,7 @@ yarn build
 ```
 
 **4. Images không hiển thị**
+
 - Kiểm tra path trong `public/` folder
 - Đảm bảo file tồn tại
 
@@ -281,6 +328,7 @@ yarn build
 ## 📊 Performance Optimization
 
 ### 1. Image optimization
+
 ```javascript
 // Sử dụng next/image với đúng props
 <Image
@@ -294,6 +342,7 @@ yarn build
 ```
 
 ### 2. Bundle analysis
+
 ```bash
 # Phân tích bundle size
 yarn analyze
@@ -304,11 +353,13 @@ yarn analyze
 ## 🛠️ Development Tips
 
 ### 1. Hot reload
+
 - Tự động reload khi save file
 - CSS changes update instantly
 - Component changes require refresh
 
 ### 2. Debug mode
+
 ```bash
 # Debug Next.js
 DEBUG=* yarn dev
@@ -318,7 +369,9 @@ yarn build:debug
 ```
 
 ### 3. Environment variables
+
 File: `.env.local`
+
 ```env
 NEXT_PUBLIC_SITE_URL=https://your-site.com
 NEXT_PUBLIC_ANALYTICS_ID=your-id

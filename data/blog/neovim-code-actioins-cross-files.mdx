@@ -2,10 +2,10 @@
 title: Perform code actions cross files in NeoVim
 summary: |
   Using NeoVim as my PDE has been a great experience, it does not only help in programming my projects, but also help in programming the IDE itself. In this post, I'll show you how to perform code actions across many files in NeoVim, which is very hard, if not impossible, to do in other IDEs.
-tags: [ vim, neovim, tools, tips ]
+tags: [vim, neovim, tools, tips]
 date: 2024-11-17
 draft: false
-images: [ /static/images/neovim-code-actioins-cross-files/banner.jpg ]
+images: [/static/images/neovim-code-actioins-cross-files/banner.jpg]
 ---
 
 In this post, I'll take an example of the project I'm working on, which is [the Apache SkyWalking](https://github.com/apache/skywalking) project, but don't worry if you're not familiar with it, we will not dive into the project itself, but rather how to do code refactorings in NeoVim.
@@ -16,25 +16,26 @@ Now, I have summarized which fields I need to add the annotation to, which are:
 
 1. Fields with another Java annotation `@Column(name = ...)`
 2. I only need to add `@ElasticSearch.EnableDocValues` to the fields whose `name` value in `@Column(name = ...)` are the following values:
-  - `COMPONENT_ID`
-  - `COMPONENT_IDS`
-  - `TIMESTAMP`
-  - `START_TIME`
-  - `ENTITY_ID`
-  - `TAG_KEY`
-  - `LATENCY`
-  - `START_TIME_SECOND`
-  - `START_TIME_NANOS`
-  - `VALUE`
-  - `TIME_BUCKET`
-  - `PERCENTAGE`
-  - `OPERATION_TIME`
-  - `CREATE_TIME`
-  - `OPERATION_TIME`
-  - `DUMP_TIME`
-  - `SEQUENCE`
-  - `TRACE_ID`
-  - `TIMESTAMP_MILLIS`
+
+- `COMPONENT_ID`
+- `COMPONENT_IDS`
+- `TIMESTAMP`
+- `START_TIME`
+- `ENTITY_ID`
+- `TAG_KEY`
+- `LATENCY`
+- `START_TIME_SECOND`
+- `START_TIME_NANOS`
+- `VALUE`
+- `TIME_BUCKET`
+- `PERCENTAGE`
+- `OPERATION_TIME`
+- `CREATE_TIME`
+- `OPERATION_TIME`
+- `DUMP_TIME`
+- `SEQUENCE`
+- `TRACE_ID`
+- `TIMESTAMP_MILLIS`
 
 Now here is how I did it.
 

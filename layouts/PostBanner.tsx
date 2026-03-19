@@ -19,8 +19,7 @@ interface LayoutProps {
 
 export default function PostMinimal({ content, next, prev, children }: LayoutProps) {
   const { slug, title, images } = content
-  const displayImage =
-    images && images.length > 0 ? images[0] : '/static/images/twitter-card.png'
+  const displayImage = images && images.length > 0 ? images[0] : '/static/images/twitter-card.png'
 
   return (
     <SectionContainer>
@@ -31,10 +30,10 @@ export default function PostMinimal({ content, next, prev, children }: LayoutPro
             <div className="w-full">
               <Bleed>
                 <div className="relative aspect-2/1 w-full">
-                  <Image 
-                    src={displayImage} 
-                    alt={title} 
-                    fill 
+                  <Image
+                    src={displayImage}
+                    alt={title}
+                    fill
                     className="object-cover"
                     priority
                     sizes="100vw"

@@ -2,10 +2,10 @@
 title: Pipe buffer content to an external command in VIM
 summary: |
   Working with VIM, there are times when you want to process the content of the buffer with an external command and replace the content with the output of the command. In this post, I will show you how to do it.
-tags: [ vim, tools, tips ]
+tags: [vim, tools, tips]
 date: 2024-11-19
 draft: false
-images: [ /static/images/pipe-content-to-external-command/banner.jpg ]
+images: [/static/images/pipe-content-to-external-command/banner.jpg]
 ---
 
 VIMers are mostly also command-line enthusiasts, as the Unix philosophy says:
@@ -19,7 +19,21 @@ it's not uncommon that you want to pipe the content in the VIM buffer to externa
 Consider you have a compacted JSON file with the following content:
 
 ```json
-{"slideshow":{"author":"Yours Truly","date":"date of publication","slides":[{"title":"Wake up to WonderWidgets!","type":"all"},{"items":["Why <em>WonderWidgets</em> are great","Who <em>buys</em> WonderWidgets"],"title":"Overview","type":"all"}],"title":"Sample Slide Show"}}
+{
+  "slideshow": {
+    "author": "Yours Truly",
+    "date": "date of publication",
+    "slides": [
+      { "title": "Wake up to WonderWidgets!", "type": "all" },
+      {
+        "items": ["Why <em>WonderWidgets</em> are great", "Who <em>buys</em> WonderWidgets"],
+        "title": "Overview",
+        "type": "all"
+      }
+    ],
+    "title": "Sample Slide Show"
+  }
+}
 ```
 
 > [!TIP]
@@ -29,7 +43,7 @@ and you want to prettify the JSON content with `jq` and replace the content with
 
 1. Make sure you are in normal mode by pressing `Esc`.
 2. Type `:%!jq` to pipe the whole buffer content to `jq`, and replace the current buffer with the output of the command.3. Press `Enter` to execute the command.
-4. Press `Esc` to exit insert mode.
+3. Press `Esc` to exit insert mode.
 
 In the step 2, `%` represents the whole buffer content, `!` is a filter command used to pipe the content to an external command, and `jq` is the external command to prettify the JSON content.
 
@@ -101,70 +115,49 @@ In Apache SkyWalking, the nodes in the topology response are base64 encoded, and
   {
     "id": "YWdlbnQ6OnNvbmdz.1-MTAuMTAwLjIwMi4xMDA6NjE2MTY=.0",
     "source": "YWdlbnQ6OnNvbmdz.1",
-    "detectPoints": [
-      "CLIENT"
-    ],
+    "detectPoints": ["CLIENT"],
     "target": "MTAuMTAwLjIwMi4xMDA6NjE2MTY=.0"
   },
   {
     "id": "YWdlbnQ6OmdhdGV3YXk=.1-YWdlbnQ6OnJlY29tbWVuZGF0aW9u.1",
     "source": "YWdlbnQ6OmdhdGV3YXk=.1",
-    "detectPoints": [
-      "CLIENT",
-      "SERVER"
-    ],
+    "detectPoints": ["CLIENT", "SERVER"],
     "target": "YWdlbnQ6OnJlY29tbWVuZGF0aW9u.1"
   },
   {
     "id": "YWdlbnQ6OnNvbmdz.1-cHNxbC5za3l3YWxraW5nLXNob3djYXNlLnN2Yy5jbHVzdGVyLmxvY2FsOjU0MzI=.0",
     "source": "YWdlbnQ6OnNvbmdz.1",
-    "detectPoints": [
-      "CLIENT"
-    ],
+    "detectPoints": ["CLIENT"],
     "target": "cHNxbC5za3l3YWxraW5nLXNob3djYXNlLnN2Yy5jbHVzdGVyLmxvY2FsOjU0MzI=.0"
   },
   {
     "id": "YWdlbnQ6OnJlY29tbWVuZGF0aW9u.1-YWdlbnQ6OnNvbmdz.1",
     "source": "YWdlbnQ6OnJlY29tbWVuZGF0aW9u.1",
-    "detectPoints": [
-      "CLIENT",
-      "SERVER"
-    ],
+    "detectPoints": ["CLIENT", "SERVER"],
     "target": "YWdlbnQ6OnNvbmdz.1"
   },
   {
     "id": "YWdlbnQ6OmFwcA==.1-YWdlbnQ6OmdhdGV3YXk=.1",
     "source": "YWdlbnQ6OmFwcA==.1",
-    "detectPoints": [
-      "CLIENT",
-      "SERVER"
-    ],
+    "detectPoints": ["CLIENT", "SERVER"],
     "target": "YWdlbnQ6OmdhdGV3YXk=.1"
   },
   {
     "id": "YWdlbnQ6OnJlY29tbWVuZGF0aW9u.1-YWdlbnQ6OnJhdGluZw==.1",
     "source": "YWdlbnQ6OnJlY29tbWVuZGF0aW9u.1",
-    "detectPoints": [
-      "CLIENT",
-      "SERVER"
-    ],
+    "detectPoints": ["CLIENT", "SERVER"],
     "target": "YWdlbnQ6OnJhdGluZw==.1"
   },
   {
     "id": "YWdlbnQ6OmdhdGV3YXk=.1-YWdlbnQ6OnNvbmdz.1",
     "source": "YWdlbnQ6OmdhdGV3YXk=.1",
-    "detectPoints": [
-      "CLIENT",
-      "SERVER"
-    ],
+    "detectPoints": ["CLIENT", "SERVER"],
     "target": "YWdlbnQ6OnNvbmdz.1"
   },
   {
     "id": "MTAuMTAwLjIwMi4xMDA6NjE2MTY=.0-YWdlbnQ6OnNvbmdz.1",
     "source": "MTAuMTAwLjIwMi4xMDA6NjE2MTY=.0",
-    "detectPoints": [
-      "SERVER"
-    ],
+    "detectPoints": ["SERVER"],
     "target": "YWdlbnQ6OnNvbmdz.1"
   }
 ]

@@ -2,10 +2,10 @@
 title: Doing math calculation in VIM
 summary: |
   In this post, you will learn how to use the expression register to evaluate a mathematical expresion and insert the result in vim, you will also learn how to use expression register in combination with other registers to evaluate a long expression
-tags: [ vim, tools, tips ]
+tags: [vim, tools, tips]
 date: 2024-11-25
 draft: false
-images: [ /static/images/do-math-in-vim/banner.jpg ]
+images: [/static/images/do-math-in-vim/banner.jpg]
 ---
 
 In vim, there is a register called `=` which can be used to evaluate an expression.
@@ -15,7 +15,7 @@ Consider you have the following expression in your VIM editor:
 
 ```text
 Q: We have 3 apples and 4 oranges, how many fruits do we have in total?
-A: 3 + 4 = 
+A: 3 + 4 =
           ^ cursor here
 ```
 
@@ -39,7 +39,7 @@ But wait, what if you have a long expression that you want to calculate, you don
 You can use the registers to store the expression and use it later in command mode. Consider you have the following expression:
 
 ```text
-I have a long expression, 3 + 4 + 5 + 6 + 7 + 8 + 9 + 10 = 
+I have a long expression, 3 + 4 + 5 + 6 + 7 + 8 + 9 + 10 =
                                                           ^ cursor here
 ```
 

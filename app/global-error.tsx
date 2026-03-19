@@ -20,17 +20,17 @@ export default function GlobalError({
   return (
     <html lang="en" suppressHydrationWarning>
       <body>
-        <div className="flex flex-col items-center justify-center min-h-screen px-4 bg-white dark:bg-black">
+        <div className="flex min-h-screen flex-col items-center justify-center bg-white px-4 dark:bg-black">
           <div className="max-w-md text-center">
-            <h1 className="text-4xl font-bold text-gray-900 dark:text-gray-100 mb-4">
+            <h1 className="mb-4 text-4xl font-bold text-gray-900 dark:text-gray-100">
               Application Error
             </h1>
-            <p className="text-gray-600 dark:text-gray-400 mb-6">
+            <p className="mb-6 text-gray-600 dark:text-gray-400">
               A critical error occurred. Please refresh the page or contact support if the problem
               persists.
             </p>
             {error.digest && (
-              <p className="text-sm text-gray-500 dark:text-gray-500 mb-6">
+              <p className="mb-6 text-sm text-gray-500 dark:text-gray-500">
                 Error ID: {error.digest}
               </p>
             )}

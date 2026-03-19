@@ -21,7 +21,7 @@ export default function Tools() {
           {toolsData.map((tool, index) => (
             <div
               key={index}
-              className="col-span-2 rounded-md border-2 border-gray-200 border-opacity-60 dark:border-gray-700 xl:col-span-1"
+              className="border-opacity-60 col-span-2 rounded-md border-2 border-gray-200 xl:col-span-1 dark:border-gray-700"
             >
               <div className="flex h-full w-full flex-col justify-between p-6">
                 <h2 className="mb-3 text-2xl leading-8 font-bold tracking-tight">

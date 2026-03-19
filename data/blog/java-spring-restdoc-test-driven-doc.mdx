@@ -2,17 +2,17 @@
 title: Test driven API documentation with Spring REST Docs
 summary: |
   API documentation is a critical intermediate between the API developers and API consumers, it helps the API consumers to understand how to use the API, what to expect from the API, and how to troubleshoot the API. But as the API evolves, it's very likely that the documentation is easy to get outdated, in this post, I'll show you how to make sure your API documentation is always up-to-date (and accurate!!!) with Spring REST Docs.
-tags: [ tutorial, java ]
+tags: [tutorial, java]
 date: 2024-11-28
 draft: false
-images: [ /static/images/java-spring.jpg ]
+images: [/static/images/java-spring.jpg]
 ---
 
 # Create a Spring Boot project
 
 Let's start by creating a new Spring Boot project with Spring REST Docs dependency, we will use the [Spring Initializr](https://start.spring.io/) to generate the project:
 
-```bash 
+```bash
 curl -G https://start.spring.io/starter.tgz \
   -d dependencies=restdocs,web \
   -d type=gradle-project \
@@ -52,6 +52,7 @@ public class GreetingController {
   }
 }
 ```
+
 Now let's start the application and send a request with `curl` to make sure the API is working:
 
 ```bash
@@ -201,4 +202,3 @@ Because the asciidoctor plugin will generate a html file from the `index.adoc` f
 And now we can build the application with `./gradlew build`, and start the application with `java -jar build/libs/demo-0.0.1-SNAPSHOT.jar`, after the application started, you can access the documentation from the URL `http://localhost:8080/docs/index.html`.
 
 [![API Documentation](/static/images/spring-restdoc-test-driven-doc/api-doc.png)](/static/images/spring-restdoc-test-driven-doc/api-doc.png)
-

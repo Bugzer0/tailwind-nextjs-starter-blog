@@ -18,18 +18,16 @@ export default function Error({
   }, [error])
 
   return (
-    <div className="flex flex-col items-center justify-center min-h-[400px] px-4">
+    <div className="flex min-h-[400px] flex-col items-center justify-center px-4">
       <div className="max-w-md text-center">
-        <h2 className="text-3xl font-bold text-gray-900 dark:text-gray-100 mb-4">
+        <h2 className="mb-4 text-3xl font-bold text-gray-900 dark:text-gray-100">
           Something went wrong!
         </h2>
-        <p className="text-gray-600 dark:text-gray-400 mb-6">
+        <p className="mb-6 text-gray-600 dark:text-gray-400">
           An error occurred while loading this page. Please try again.
         </p>
         {error.digest && (
-          <p className="text-sm text-gray-500 dark:text-gray-500 mb-6">
-            Error ID: {error.digest}
-          </p>
+          <p className="mb-6 text-sm text-gray-500 dark:text-gray-500">Error ID: {error.digest}</p>
         )}
         <button
           onClick={reset}

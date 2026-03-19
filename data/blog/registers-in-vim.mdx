@@ -2,10 +2,10 @@
 title: VIM registers explained, usages and examples
 summary: |
   In this post, I will explain all registers in VIM, what they are, how to use them, and provide some examples to help you understand them better, and use them in your daily VIM workflow
-tags: [ vim, tools, tips ]
+tags: [vim, tools, tips]
 date: 2024-12-04
 draft: false
-images: [ /static/images/registers-in-vim/banner.jpg ]
+images: [/static/images/registers-in-vim/banner.jpg]
 ---
 
 Registers are one of the most unique and powerful features in VIM, they are used to store text, numbers, commands, and even macros, and can be used to paste the stored content in different ways. In this post, I'll list all registers in VIM and explain what they are, how to use them, and provide some examples to help you understand them better, and use them in your daily VIM workflow.
@@ -51,11 +51,11 @@ Specify the register as lowercase in commands to replace the content of the regi
 
 - `".` register contains the last inserted text, it is read-only and can't be changed.
 - `":` register contains the last executed command, it is read-only and can't be changed.
-> [!TIP]
-> `:` starts the command mode, which helps you remember that `":` register contains the last executed command.
+  > [!TIP]
+  > `:` starts the command mode, which helps you remember that `":` register contains the last executed command.
 - `"%` register contains the current file name, it is read-only and can't be changed.
-> [!TIP]
-> `%` indicates the current file name in the command mode too, you can run `:echo %` to see the current file name, run `:%s` to replace in the whole file, or run `:%!` to filter the whole file through an external command.
+  > [!TIP]
+  > `%` indicates the current file name in the command mode too, you can run `:echo %` to see the current file name, run `:%s` to replace in the whole file, or run `:%!` to filter the whole file through an external command.
 
 ## Alternate file register `"#`
 
