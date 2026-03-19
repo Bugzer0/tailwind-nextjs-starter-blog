@@ -69,7 +69,7 @@ def retry_api_call(func):
 def generate_metadata(client, topic: str) -> dict:
     """Step 1: Generate blog metadata as structured JSON (small, safe to parse)."""
     response = retry_api_call(lambda: client.models.generate_content(
-        model="gemini-2.5-flash",
+        model="gemini-3.1-flash-lite-preview",
         contents=f"Generate blog post metadata for the topic: {topic}",
         config=types.GenerateContentConfig(
             system_instruction="""Return ONLY a JSON object with blog post metadata. 
@@ -119,7 +119,7 @@ Rules:
 def generate_content(client, topic: str, title: str, skill_prompt: str) -> str:
     """Step 2: Generate blog content as plain markdown (no JSON wrapping)."""
     response = retry_api_call(lambda: client.models.generate_content(
-        model="gemini-2.5-flash",
+        model="gemini-3.1-flash-lite-preview",
         contents=f'Write a blog post titled "{title}" about: {topic}',
         config=types.GenerateContentConfig(
             system_instruction=f"""You are a technical blog writer.
@@ -161,10 +161,10 @@ Rules:
 
 
 def generate_image(client, prompt: str, output_path: Path) -> bool:
-    """Generate an image using Gemini's image generation."""
+    """Generate an image using Gemini's image generation model."""
     try:
         response = retry_api_call(lambda: client.models.generate_content(
-            model="gemini-2.0-flash-exp",
+            model="gemini-3.1-flash-image-preview",
             contents=f"Generate an image: {prompt}",
             config=types.GenerateContentConfig(
                 response_modalities=["IMAGE", "TEXT"],
