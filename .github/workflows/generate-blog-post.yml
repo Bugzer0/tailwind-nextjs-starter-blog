@@ -1,0 +1,71 @@
+name: Generate AI Blog Post
+
+on:
+  # Chạy manual từ GitHub UI
+  workflow_dispatch:
+    inputs:
+      topic:
+        description: 'Chủ đề bài viết (VD: "Hướng dẫn sử dụng Docker Compose cho dự án Next.js")'
+        required: true
+        type: string
+
+  # Chạy tự động theo lịch (mỗi thứ 2 lúc 8h sáng UTC+7 = 1h UTC)
+  # schedule:
+  #   - cron: '0 1 * * 1'
+
+permissions:
+  contents: write
+
+jobs:
+  generate:
+    runs-on: ubuntu-latest
+    timeout-minutes: 10
+    steps:
+      - uses: actions/checkout@v4
+
+      - uses: actions/setup-python@v5
+        with:
+          python-version: '3.12'
+          cache: 'pip'
+          cache-dependency-path: scripts/ai-blog-generator/requirements.txt
+
+      - name: Install dependencies
+        run: pip install -r scripts/ai-blog-generator/requirements.txt
+
+      - name: Resolve topic
+        id: topic
+        env:
+          INPUT_TOPIC: ${{ inputs.topic }}
+        run: |
+          TOPIC="$INPUT_TOPIC"
+          if [ -z "$TOPIC" ]; then
+            if [ -f "scripts/ai-blog-generator/topics.txt" ]; then
+              # Lọc dòng trống, random 1 topic
+              TOPIC=$(grep -v '^\s*$' scripts/ai-blog-generator/topics.txt | shuf -n 1)
+              echo "📌 Random topic: $TOPIC"
+            fi
+          fi
+          if [ -z "$TOPIC" ]; then
+            echo "❌ No topic provided and topics.txt is empty or not found"
+            exit 1
+          fi
+          echo "value=$TOPIC" >> "$GITHUB_OUTPUT"
+
+      - name: Generate blog post
+        id: generate
+        env:
+          GEMINI_API_KEY: ${{ secrets.GEMINI_API_KEY }}
+          BLOG_TOPIC: ${{ steps.topic.outputs.value }}
+        run: python scripts/ai-blog-generator/generate_post.py
+
+      - name: Commit and push
+        env:
+          POST_TITLE: ${{ steps.generate.outputs.title }}
+        run: |
+          git config user.name "github-actions[bot]"
+          git config user.email "github-actions[bot]@users.noreply.github.com"
+          git add data/blog/ public/static/images/
+          git diff --cached --quiet && echo "No changes to commit" && exit 0
+          TITLE="${POST_TITLE:-AI generated post}"
+          git commit -m "📝 New AI blog post: ${TITLE}"
+          git push
