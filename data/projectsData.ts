@@ -8,13 +8,13 @@ interface Project {
 const projectsData: Project[] = [
   {
     title: 'GlucoAI App',
-    description: `Ứng dụng quản lý đường huyết thông minh với AI, giúp người tiểu đường theo dõi chỉ số glucose, A1C, insulin và dinh dưỡng. Tích hợp với các thiết bị CGM phổ biến như Dexcom, FreeStyle Libre. Phân tích xu hướng và đưa ra gợi ý cá nhân hóa để kiểm soát đường huyết tốt hơn.`,
+    description: `Smart blood glucose management app powered by AI, helping diabetics track glucose, A1C, insulin, and nutrition. Integrates with popular CGM devices like Dexcom and FreeStyle Libre. Analyzes trends and provides personalized suggestions for better blood glucose control.`,
     imgSrc: '/static/images/glucoai-app-logo.png',
     href: 'https://apps.apple.com/app/glucoai',
   },
   {
-    title: 'Blog về Sức khỏe Chuyển hóa',
-    description: `Blog chia sẻ kiến thức chuyên sâu về quản lý tiểu đường, dinh dưỡng, công nghệ CGM, và lối sống lành mạnh. Cập nhật hàng ngày với các bài viết từ chuyên gia, review ứng dụng, hướng dẫn thực hành và câu chuyện thành công từ cộng đồng.`,
+    title: 'Metabolic Health Blog',
+    description: `Blog sharing in-depth knowledge about diabetes management, nutrition, CGM technology, and healthy living. Updated daily with expert articles, app reviews, practical guides, and success stories from the community.`,
     imgSrc: '/static/images/blog-logo.png',
     href: 'https://glucoai.app/blog',
   },

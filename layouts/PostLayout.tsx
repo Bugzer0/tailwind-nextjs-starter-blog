@@ -10,6 +10,7 @@ import Tag from '@/components/Tag'
 import siteMetadata from '@/data/siteMetadata'
 import ScrollTopAndComment from '@/components/ScrollTopAndComment'
 import NewsletterForm from 'pliny/ui/NewsletterForm'
+import dictionary from '@/data/dictionary'
 
 const editUrl = (path: string) => `${siteMetadata.siteRepo}/blob/main/data/${path}`
 const discussUrl = (path: string) =>
@@ -43,7 +44,7 @@ export default function PostLayout({ content, authorDetails, next, prev, childre
             <div className="space-y-1 text-center">
               <dl className="space-y-10">
                 <div>
-                  <dt className="sr-only">Published on</dt>
+                  <dt className="sr-only">{dictionary.blog.publishedOn}</dt>
                   <dd className="text-base leading-6 font-medium text-gray-500 dark:text-gray-400">
                     <time dateTime={date}>
                       {new Date(date).toLocaleDateString(siteMetadata.locale, postDateTemplate)}
@@ -59,7 +60,7 @@ export default function PostLayout({ content, authorDetails, next, prev, childre
           <div className="grid-rows-[auto_1fr] divide-y divide-gray-200 pb-8 xl:grid xl:grid-cols-4 xl:gap-x-6 xl:divide-y-0 dark:divide-gray-700">
             {siteMetadata.showAuthorsInBlog && (
               <dl className="pt-6 pb-10 xl:border-b xl:border-gray-200 xl:pt-11 xl:dark:border-gray-700">
-                <dt className="sr-only">Authors</dt>
+                <dt className="sr-only">{dictionary.post.authors}</dt>
                 <dd>
                   <ul className="flex flex-wrap justify-center gap-4 sm:space-x-12 xl:block xl:space-y-8 xl:space-x-0">
                     {authorDetails.map((author) => (
@@ -76,9 +77,9 @@ export default function PostLayout({ content, authorDetails, next, prev, childre
                           />
                         )}
                         <dl className="text-sm leading-5 font-medium whitespace-nowrap">
-                          <dt className="sr-only">Name</dt>
+                          <dt className="sr-only">{dictionary.post.name}</dt>
                           <dd className="text-gray-900 dark:text-gray-100">{author.name}</dd>
-                          <dt className="sr-only">Twitter</dt>
+                          <dt className="sr-only">{dictionary.post.twitter}</dt>
                           <dd>
                             {author.twitter && (
                               <Link
@@ -103,17 +104,17 @@ export default function PostLayout({ content, authorDetails, next, prev, childre
               <div className="py-8 text-gray-700 dark:text-gray-300 xl:[&_form>div]:w-1/2">
                 <div className="[&_input#email-input]:w-full">
                   {siteMetadata.newsletter?.provider && (
-                    <NewsletterForm title="Like this post? Subscribe to stay updated and receive the latest post straight to your mailbox!" />
+                    <NewsletterForm title={dictionary.post.newsletterCta} />
                   )}
                 </div>
               </div>
               {siteMetadata.showDiscussOnTwitter && (
                 <div className="pt-6 pb-6 text-sm text-gray-700 dark:text-gray-300">
                   <Link href={discussUrl(path)} rel="nofollow">
-                    Discuss on Twitter
+                    {dictionary.post.discussOnTwitter}
                   </Link>
                   {` • `}
-                  <Link href={editUrl(filePath)}>View on GitHub</Link>
+                  <Link href={editUrl(filePath)}>{dictionary.post.viewOnGithub}</Link>
                 </div>
               )}
               {siteMetadata.comments && (
@@ -130,7 +131,7 @@ export default function PostLayout({ content, authorDetails, next, prev, childre
                 {tags && (
                   <div className="py-4 xl:py-8">
                     <h2 className="text-xs tracking-wide text-gray-500 uppercase dark:text-gray-400">
-                      Tags
+                      {dictionary.post.tags}
                     </h2>
                     <div className="flex flex-wrap">
                       {tags.map((tag) => (
@@ -144,7 +145,7 @@ export default function PostLayout({ content, authorDetails, next, prev, childre
                     {prev && prev.path && (
                       <div>
                         <h2 className="text-xs tracking-wide text-gray-500 uppercase dark:text-gray-400">
-                          Previous Article
+                          {dictionary.post.previousArticle}
                         </h2>
                         <div className="text-primary-500 hover:text-primary-600 dark:hover:text-primary-400">
                           <Link href={`/${prev.path}`}>{prev.title}</Link>
@@ -154,7 +155,7 @@ export default function PostLayout({ content, authorDetails, next, prev, childre
                     {next && next.path && (
                       <div>
                         <h2 className="text-xs tracking-wide text-gray-500 uppercase dark:text-gray-400">
-                          Next Article
+                          {dictionary.post.nextArticle}
                         </h2>
                         <div className="text-primary-500 hover:text-primary-600 dark:hover:text-primary-400">
                           <Link href={`/${next.path}`}>{next.title}</Link>
@@ -168,9 +169,9 @@ export default function PostLayout({ content, authorDetails, next, prev, childre
                 <Link
                   href={`/${basePath}`}
                   className="text-primary-500 hover:text-primary-600 dark:hover:text-primary-400"
-                  aria-label="Back to the blog"
+                  aria-label={dictionary.post.backToBlog}
                 >
-                  &larr; Back to the blog
+                  &larr; {dictionary.post.backToBlog}
                 </Link>
               </div>
             </footer>

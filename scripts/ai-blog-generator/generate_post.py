@@ -158,30 +158,30 @@ def generate_topic(client, existing_context: str, skill_prompt: str) -> str:
     """Use AI to generate a unique blog topic about glucose/diabetes."""
     response = retry_api_call(lambda: client.models.generate_content(
         model="gemini-3.1-flash-lite-preview",
-        contents=f"""Generate ONE new blog post topic for a Vietnamese glucose/diabetes health blog.
+        contents=f"""Generate ONE new blog post topic for an English glucose/diabetes health blog.
 
 {existing_context}
 
 IMPORTANT: The new topic MUST be different from ALL existing posts listed above.
 Choose a topic that would attract readers interested in glucose monitoring, diabetes management, metabolic health, CGM technology, or healthy lifestyle for blood sugar control.""",
         config=types.GenerateContentConfig(
-            system_instruction=f"""You are a content strategist for a Vietnamese health blog about glucose and diabetes.
+            system_instruction=f"""You are a content strategist for an English health blog about glucose and diabetes.
 
 Reference the content strategy below to pick topics from the right content pillars:
 {skill_prompt}
 
 Return ONLY a JSON object:
 {{
-  "topic": "A specific blog topic description in Vietnamese (1-2 sentences)",
-  "content_type": "how-to|app-review|listicle|myth-busting|case-study|beginners-guide",
-  "primary_keyword": "main SEO keyword in Vietnamese",
+  "topic": "A specific blog topic description in English (1-2 sentences)",
+  "content_type": "how-to|listicle|myth-busting|case-study|beginners-guide|device-review",
+  "primary_keyword": "main SEO keyword in English",
   "reasoning": "Brief explanation of why this topic is valuable and how it differs from existing posts"
 }}
 
 Rules:
-- Topic MUST be in Vietnamese
+- Topic MUST be in English
 - Topic should be specific enough to write a focused 800-2500 word article
-- Pick topics that naturally lead to mentioning glucose monitoring apps
+- Pick topics that naturally lead to discussing glucose monitoring and diabetes management
 - Vary content types — don't always pick the same type
 - Consider seasonal relevance and trending health topics""",
             temperature=0.9,
@@ -233,11 +233,11 @@ Do NOT include the blog content itself.
 
 JSON structure:
 {{
-  "title": "A compelling blog post title in Vietnamese",
-  "summary": "A 1-2 sentence SEO summary in Vietnamese (single line, no newlines)",
+  "title": "A compelling blog post title in English",
+  "summary": "A 1-2 sentence SEO summary in English (single line, no newlines)",
   "tags": ["tag1", "tag2"],
   "image_prompts": {{
-    "banner": "Detailed prompt for a banner/thumbnail image about glucose/health",
+    "banner": "Detailed prompt for a square thumbnail image directly related to the blog topic",
     "inline1": "Detailed prompt for first inline illustration (appears after first section)",
     "inline2": "Detailed prompt for second inline illustration (appears mid-article)"
   }}
@@ -246,13 +246,14 @@ JSON structure:
 {existing_context}
 
 Rules:
-- Title and summary MUST be in Vietnamese
+- Title and summary MUST be in English
 - Title should contain the primary SEO keyword, under 60 characters
-- Tags should be lowercase English from this list: glucose, diabetes, cgm, a1c, insulin, blood-sugar, nutrition, diet, app-review, tips, health, metabolic-health, freestyle-libre, dexcom, type-1, type-2, prediabetes
+- Tags should be lowercase English from this list: glucose, diabetes, cgm, a1c, insulin, blood-sugar, nutrition, diet, tips, health, metabolic-health, type-1, type-2, prediabetes
 - image_prompts: MUST include banner, inline1, and inline2 (3 images total)
+- banner: MUST directly represent the specific topic of the blog post (e.g., if the post is about A1C, the image should depict A1C testing or results). Do NOT use generic health images.
 - All image prompts should describe clean, modern, health-themed illustrations (no text in images, no faces)
-- inline1: illustration for early in article (after first main section)
-- inline2: illustration for mid-article (around 50-60% through content)
+- inline1: illustration for early in article (after first main section), related to the section content
+- inline2: illustration for mid-article (around 50-60% through content), related to the section content
 - Keep summary under 200 characters
 - 1-3 tags maximum
 - Title MUST be different from all existing posts""",
@@ -290,17 +291,17 @@ def generate_content(client, topic: str, title: str, skill_prompt: str, existing
         model="gemini-3.1-flash-lite-preview",
         contents=f'Write a blog post titled "{title}" about: {topic}',
         config=types.GenerateContentConfig(
-            system_instruction=f"""You are a Vietnamese health blog writer specializing in glucose monitoring and diabetes management.
+            system_instruction=f"""You are an English health blog writer specializing in glucose monitoring and diabetes management.
 
 {skill_prompt}
 
 {existing_context}
-If any existing posts are related, you may reference them with relative links like [bài viết liên quan](/blog/slug-name) to build internal linking.
+If any existing posts are related, you may reference them with relative links like [related article](/blog/slug-name) to build internal linking.
 
 Write the blog post content in PLAIN MARKDOWN format.
 
 Rules:
-- Write ENTIRELY in Vietnamese
+- Write ENTIRELY in English
 - Do NOT include any frontmatter (no --- block)
 - Do NOT wrap in JSON or code fences
 - Use ## for main sections and ### for subsections
@@ -308,8 +309,9 @@ Rules:
 - MUST include `<!-- INLINE_IMAGE_2 -->` placeholder around 50-60% through the article
 - Start directly with the introduction paragraph (no title heading)
 - Minimum 800 words, maximum 2500 words
-- Follow the CTA strategy: naturally mention relevant apps when solving a problem
-- End with a "Tóm Lại" or "Kết Luận" section with key takeaways
+- Follow the CTA strategy: naturally guide readers toward better health habits and GlucoAI
+- Do NOT mention any specific third-party app names. Use generic terms like "glucose tracking apps" or "diabetes management tools" instead. Only GlucoAI may be mentioned by name.
+- End with a "Summary" or "Conclusion" section with key takeaways
 - Include a natural call-to-action at the end""",
             temperature=0.8,
         ),
@@ -338,16 +340,27 @@ Rules:
 # Step 4: Generate images
 # ---------------------------------------------------------------------------
 
-def generate_image(client, prompt: str, output_path: Path) -> bool:
-    """Generate an image using Gemini's image generation model."""
-    print(f"  → Starting image generation: {output_path.name}")
+def generate_image(client, prompt: str, output_path: Path, aspect_ratio: str = "1:1") -> bool:
+    """Generate an image using Gemini's image generation model.
+    
+    Args:
+        client: Gemini API client
+        prompt: Image generation prompt
+        output_path: Path to save the image
+        aspect_ratio: Aspect ratio for the generated image (e.g., "1:1", "16:9")
+    """
+    print(f"  → Starting image generation: {output_path.name} (aspect_ratio={aspect_ratio})")
     sys.stdout.flush()
     try:
         response = retry_api_call(lambda: client.models.generate_content(
-            model="gemini-3.1-flash-image-preview",
+            # model="gemini-3.1-flash-image-preview",
+            model="gemini-2.5-flash-image",
             contents=f"Generate an image: {prompt}",
             config=types.GenerateContentConfig(
                 response_modalities=["IMAGE", "TEXT"],
+                image_config=types.ImageConfig(
+                    aspect_ratio=aspect_ratio,
+                ),
             ),
         ))
 
@@ -370,12 +383,10 @@ def generate_image(client, prompt: str, output_path: Path) -> bool:
                 image.save(str(output_path), "JPEG", quality=85)
                 print(f"  ✓ Image saved: {output_path}")
                 print(f"  ✓ Image size: {image.size}")
-                print(f"  ✓ Image mode: {image.mode}")
                 sys.stdout.flush()
                 return True
 
         print(f"  ✗ No image data in response for: {prompt[:80]}...")
-        print(f"  ✗ Response content: {response.text[:500]}")
         return False
 
     except Exception as e:
@@ -390,8 +401,9 @@ def generate_image(client, prompt: str, output_path: Path) -> bool:
 
 def create_blog_post(metadata: dict, content: str, slug_name: str, images_generated: dict):
     """Create the MDX file with frontmatter and content."""
-    today = datetime.now().strftime("%Y-%m-%d")
+    today = datetime.now().strftime("%Y-%m-%dT%H:%M:%S")
     image_dir = f"/static/images/{slug_name}"
+    alt_base = metadata.get("title", "illustration")
 
     # Build images list for frontmatter
     images_list = []
@@ -401,21 +413,21 @@ def create_blog_post(metadata: dict, content: str, slug_name: str, images_genera
     # Process content - replace inline image placeholders
     if images_generated.get("inline1"):
         if "<!-- INLINE_IMAGE_1 -->" in content:
-            inline1_img = f"\n![illustration]({image_dir}/inline1.jpg)\n"
+            inline1_img = f"\n![{alt_base} - illustration 1]({image_dir}/inline1.jpg)\n"
             content = content.replace("<!-- INLINE_IMAGE_1 -->", inline1_img)
         else:
             # Fallback: insert after first ## section
             lines = content.split("\n")
             for i, line in enumerate(lines):
                 if line.startswith("## ") and i > 0:
-                    inline1_img = f"\n![illustration]({image_dir}/inline1.jpg)\n"
+                    inline1_img = f"\n![{alt_base} - illustration 1]({image_dir}/inline1.jpg)\n"
                     lines.insert(i + 1, inline1_img)
                     break
             content = "\n".join(lines)
 
     if images_generated.get("inline2"):
         if "<!-- INLINE_IMAGE_2 -->" in content:
-            inline2_img = f"\n![illustration]({image_dir}/inline2.jpg)\n"
+            inline2_img = f"\n![{alt_base} - illustration 2]({image_dir}/inline2.jpg)\n"
             content = content.replace("<!-- INLINE_IMAGE_2 -->", inline2_img)
         else:
             # Fallback: insert at middle of content
@@ -424,7 +436,7 @@ def create_blog_post(metadata: dict, content: str, slug_name: str, images_genera
             inserted = False
             for i in range(mid_point, len(lines)):
                 if lines[i].startswith("## "):
-                    inline2_img = f"\n![illustration]({image_dir}/inline2.jpg)\n"
+                    inline2_img = f"\n![{alt_base} - illustration 2]({image_dir}/inline2.jpg)\n"
                     lines.insert(i + 1, inline2_img)
                     inserted = True
                     break
@@ -535,7 +547,8 @@ def main():
         print("\n🎨 Generating banner image...")
         sys.stdout.flush()
         images_generated["banner"] = generate_image(
-            client, image_prompts["banner"], image_dir / "banner.jpg"
+            client, image_prompts["banner"], image_dir / "banner.jpg",
+            aspect_ratio="1:1",
         )
         sys.stdout.flush()
 
@@ -543,7 +556,8 @@ def main():
         print("🎨 Generating inline image 1...")
         sys.stdout.flush()
         images_generated["inline1"] = generate_image(
-            client, image_prompts["inline1"], image_dir / "inline1.jpg"
+            client, image_prompts["inline1"], image_dir / "inline1.jpg",
+            aspect_ratio="16:9",
         )
         sys.stdout.flush()
 
@@ -551,7 +565,8 @@ def main():
         print("🎨 Generating inline image 2...")
         sys.stdout.flush()
         images_generated["inline2"] = generate_image(
-            client, image_prompts["inline2"], image_dir / "inline2.jpg"
+            client, image_prompts["inline2"], image_dir / "inline2.jpg",
+            aspect_ratio="16:9",
         )
         sys.stdout.flush()
 

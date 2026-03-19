@@ -3,8 +3,8 @@ const siteMetadata = {
   title: `GlucoAI's blog`,
   author: 'GlucoAI',
   headerTitle: 'GlucoAI',
-  description: `Blog chia sẻ kiến thức về quản lý đường huyết, tiểu đường, và sức khỏe chuyển hóa`,
-  language: 'vi',
+  description: `Blog sharing knowledge about blood glucose management, diabetes, and metabolic health`,
+  language: 'en',
   theme: 'system',
   siteUrl: 'https://glucoai.app',
   siteRepo: 'https://github.com/glucoai/glucoai.app',
@@ -14,7 +14,7 @@ const siteMetadata = {
   github: 'https://github.com/glucoai',
   x: 'https://twitter.com/glucoai',
   linkedin: 'https://linkedin.com/in/glucoai',
-  locale: 'vi-VN',
+  locale: 'en-US',
   stickyNav: false,
   analytics: {
     googleAnalytics: {

@@ -32,8 +32,8 @@ const toolsData: Tool[] = [
     href: 'https://pdf.kezhenxu94.me',
   },
   {
-    title: '中文简体繁体转换',
-    description: `直接在你的浏览器中进行中文简繁体转换, 无需连接服务器, 完全在本地浏览器运行.`,
+    title: 'Chinese Simplified/Traditional Converter',
+    description: `Convert between Simplified and Traditional Chinese right in your browser, no server connection needed, runs entirely locally.`,
     href: 'https://cc.kezhenxu94.me',
   },
 ]

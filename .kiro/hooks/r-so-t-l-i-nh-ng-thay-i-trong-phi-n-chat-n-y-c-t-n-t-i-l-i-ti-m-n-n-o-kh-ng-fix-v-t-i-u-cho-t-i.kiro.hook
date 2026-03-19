@@ -1,0 +1,15 @@
+{
+  "version": "1.0.0",
+  "enabled": true,
+  "name": "review-code",
+  "description": "Rà soát lại những thay đổi trong phiên chat này, có tồn tại lỗi tiềm ẩn nào không, fix và tối ưu cho tôi",
+  "when": {
+    "type": "userTriggered"
+  },
+  "then": {
+    "type": "askAgent",
+    "prompt": "Rà soát lại những thay đổi trong phiên chat này, có tồn tại lỗi tiềm ẩn nào không, fix và tối ưu cho tôi"
+  },
+  "workspaceFolderName": "tailwind-nextjs-starter-blog",
+  "shortName": "r-so-t-l-i-nh-ng-thay-i-trong-phi-n-chat-n-y-c-t-n-t-i-l-i-ti-m-n-n-o-kh-ng-fix-v-t-i-u-cho-t-i"
+}

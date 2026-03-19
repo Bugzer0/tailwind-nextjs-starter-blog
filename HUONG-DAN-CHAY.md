@@ -30,6 +30,7 @@ yarn dev
 npm run dev
 ```
 
+
 ### 3. Mở trình duyệt
 
 👉 [http://localhost:3000](http://localhost:3000)

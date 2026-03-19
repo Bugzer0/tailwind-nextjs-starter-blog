@@ -2,9 +2,10 @@ import { Policy, allPolicies } from 'contentlayer/generated'
 import { MDXLayoutRenderer } from 'pliny/mdx-components'
 import PolicyLayout from '@/layouts/PolicyLayout'
 import { coreContent } from 'pliny/utils/contentlayer'
+import dictionary from '@/data/dictionary'
 import { genPageMetadata } from 'app/seo'
 
-export const metadata = genPageMetadata({ title: 'Terms of Service' })
+export const metadata = genPageMetadata({ title: dictionary.footer.termsOfService })
 
 export default function Page() {
   const policy = allPolicies.find((p) => p.slug === 'terms') as Policy

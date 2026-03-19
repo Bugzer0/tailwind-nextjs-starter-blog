@@ -2,15 +2,8 @@
 
 import { Fragment, useEffect, useState } from 'react'
 import { useTheme } from 'next-themes'
-import {
-  Menu,
-  MenuButton,
-  MenuItem,
-  MenuItems,
-  Radio,
-  RadioGroup,
-  Transition,
-} from '@headlessui/react'
+import { Menu, MenuButton, MenuItem, MenuItems, Radio, RadioGroup, Transition } from '@headlessui/react'
+import dictionary from '@/data/dictionary'
 
 const Sun = () => (
   <svg
@@ -65,7 +58,7 @@ const ThemeSwitch = () => {
     <div className="mr-5 flex items-center">
       <Menu as="div" className="relative inline-block text-left">
         <div className="hover:text-primary-500 dark:hover:text-primary-400 flex items-center justify-center">
-          <MenuButton aria-label="Theme switcher">
+          <MenuButton aria-label={dictionary.ui.themeSwitcher}>
             {mounted ? resolvedTheme === 'dark' ? <Moon /> : <Sun /> : <Blank />}
           </MenuButton>
         </div>
@@ -90,7 +83,7 @@ const ThemeSwitch = () => {
                         <div className="mr-2">
                           <Sun />
                         </div>
-                        Light
+                        {dictionary.ui.themeLight}
                       </button>
                     )}
                   </MenuItem>
@@ -106,7 +99,7 @@ const ThemeSwitch = () => {
                         <div className="mr-2">
                           <Moon />
                         </div>
-                        Dark
+                        {dictionary.ui.themeDark}
                       </button>
                     )}
                   </MenuItem>
@@ -122,7 +115,7 @@ const ThemeSwitch = () => {
                         <div className="mr-2">
                           <Monitor />
                         </div>
-                        System
+                        {dictionary.ui.themeSystem}
                       </button>
                     )}
                   </MenuItem>

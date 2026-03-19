@@ -1,8 +1,10 @@
+import dictionary from './dictionary'
+
 const headerNavLinks = [
-  { href: '/', title: 'Trang chủ' },
-  { href: '/blog', title: 'Blog' },
-  { href: '/tags', title: 'Chủ đề' },
-  { href: '/about', title: 'Về chúng tôi' },
+  { href: '/', title: dictionary.nav.home },
+  { href: '/blog', title: dictionary.nav.blog },
+  { href: '/tags', title: dictionary.nav.tags },
+  { href: '/about', title: dictionary.nav.about },
 ]
 
 export default headerNavLinks

@@ -8,6 +8,7 @@ import type { Blog } from 'contentlayer/generated'
 import Link from '@/components/Link'
 import Tag from '@/components/Tag'
 import siteMetadata from '@/data/siteMetadata'
+import dictionary from '@/data/dictionary'
 import tagData from 'app/tag-data.json'
 import Image from '@/components/Image'
 
@@ -33,7 +34,7 @@ function Pagination({ totalPages, currentPage }: PaginationProps) {
       <nav className="flex justify-between">
         {!prevPage && (
           <button className="cursor-auto disabled:opacity-50" disabled={!prevPage}>
-            Previous
+            {dictionary.blog.previous}
           </button>
         )}
         {prevPage && (
@@ -41,7 +42,7 @@ function Pagination({ totalPages, currentPage }: PaginationProps) {
             href={currentPage - 1 === 1 ? `/${basePath}/` : `/${basePath}/page/${currentPage - 1}`}
             rel="prev"
           >
-            Previous
+            {dictionary.blog.previous}
           </Link>
         )}
         <span>
@@ -49,12 +50,12 @@ function Pagination({ totalPages, currentPage }: PaginationProps) {
         </span>
         {!nextPage && (
           <button className="cursor-auto disabled:opacity-50" disabled={!nextPage}>
-            Next
+            {dictionary.blog.next}
           </button>
         )}
         {nextPage && (
           <Link href={`/${basePath}/page/${currentPage + 1}`} rel="next">
-            Next
+            {dictionary.blog.next}
           </Link>
         )}
       </nav>
@@ -87,13 +88,13 @@ export default function ListLayoutWithTags({
           <div className="hidden h-full max-h-screen max-w-[280px] min-w-[280px] flex-wrap overflow-auto rounded bg-gray-50 pt-5 sm:flex dark:bg-gray-900/70 dark:shadow-gray-800/40">
             <div className="px-6 py-4">
               {pathname.startsWith('/blog') ? (
-                <h3 className="text-primary-500 font-bold uppercase">All Posts</h3>
+                <h3 className="text-primary-500 font-bold uppercase">{dictionary.blog.allPosts}</h3>
               ) : (
                 <Link
                   href={`/blog`}
                   className="hover:text-primary-500 dark:hover:text-primary-500 font-bold text-gray-700 uppercase dark:text-gray-300"
                 >
-                  All Posts
+                  {dictionary.blog.allPosts}
                 </Link>
               )}
               <ul>
@@ -126,27 +127,25 @@ export default function ListLayoutWithTags({
                 return (
                   <li key={path} className="py-5 first:pt-0">
                     <article className="flex flex-row xl:space-x-5">
-                      {images && (
-                        <Link
-                          href={`/${path}`}
-                          aria-label={`Read "${title}"`}
-                          className="hidden flex-none xl:flex"
-                        >
-                          <Image
-                            src={images[0]}
-                            alt={title}
-                            width={150}
-                            height={150}
-                            className="thumbnail-image"
-                            quality={75}
-                            sizes="150px"
-                            loading="lazy"
-                          />
-                        </Link>
-                      )}
+                      <Link
+                        href={`/${path}`}
+                        aria-label={`Read "${title}"`}
+                        className="hidden flex-none xl:flex"
+                      >
+                        <Image
+                          src={images?.[0] ?? ''}
+                          alt={title}
+                          width={150}
+                          height={150}
+                          className="thumbnail-image"
+                          quality={75}
+                          sizes="150px"
+                          loading="lazy"
+                        />
+                      </Link>
                       <div className="flex-grow">
                         <dl>
-                          <dt className="sr-only">Published on</dt>
+                          <dt className="sr-only">{dictionary.blog.publishedOn}</dt>
                           <dd className="text-base leading-6 font-medium text-gray-500 dark:text-gray-400">
                             <time dateTime={date}>{formatDate(date, siteMetadata.locale)}</time>
                           </dd>

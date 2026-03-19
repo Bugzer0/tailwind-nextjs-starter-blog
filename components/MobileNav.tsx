@@ -4,6 +4,7 @@ import { Dialog, DialogPanel, Transition, TransitionChild } from '@headlessui/re
 import { Fragment, useState, useEffect } from 'react'
 import Link from './Link'
 import headerNavLinks from '@/data/headerNavLinks'
+import dictionary from '@/data/dictionary'
 
 const MobileNav = () => {
   const [navShow, setNavShow] = useState(false)
@@ -34,7 +35,7 @@ const MobileNav = () => {
   // Prevent hydration mismatch
   if (!mounted) {
     return (
-      <button aria-label="Toggle Menu" className="sm:hidden">
+      <button aria-label={dictionary.ui.toggleMenu} className="sm:hidden">
         <svg
           xmlns="http://www.w3.org/2000/svg"
           viewBox="0 0 20 20"
@@ -53,7 +54,7 @@ const MobileNav = () => {
 
   return (
     <>
-      <button aria-label="Toggle Menu" onClick={onToggleNav} className="sm:hidden">
+      <button aria-label={dictionary.ui.toggleMenu} onClick={onToggleNav} className="sm:hidden">
         <svg
           xmlns="http://www.w3.org/2000/svg"
           viewBox="0 0 20 20"
@@ -106,7 +107,7 @@ const MobileNav = () => {
 
               <button
                 className="hover:text-primary-500 dark:hover:text-primary-400 fixed top-7 right-4 h-16 w-16 p-4 text-gray-900 dark:text-gray-100"
-                aria-label="Toggle Menu"
+                aria-label={dictionary.ui.toggleMenu}
                 onClick={onToggleNav}
               >
                 <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 20 20" fill="currentColor">

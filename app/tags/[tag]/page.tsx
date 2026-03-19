@@ -2,6 +2,7 @@ import { Suspense } from 'react'
 import { slug } from 'github-slugger'
 import { allCoreContent, sortPosts } from 'pliny/utils/contentlayer'
 import siteMetadata from '@/data/siteMetadata'
+import dictionary from '@/data/dictionary'
 import ListLayout from '@/layouts/ListLayoutWithTags'
 import { allBlogs } from 'contentlayer/generated'
 import tagData from 'app/tag-data.json'
@@ -45,7 +46,7 @@ export default async function TagPage(props: { params: Promise<{ tag: string }> 
     return notFound()
   }
   return (
-    <Suspense fallback={<div className="animate-pulse">Loading posts...</div>}>
+    <Suspense fallback={<div className="animate-pulse">{dictionary.blog.loading}</div>}>
       <ListLayout posts={filteredPosts} title={title} />
     </Suspense>
   )

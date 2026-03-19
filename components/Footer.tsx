@@ -1,5 +1,6 @@
 import Link from './Link'
 import siteMetadata from '@/data/siteMetadata'
+import dictionary from '@/data/dictionary'
 import SocialIcon from '@/components/social-icons'
 
 export default function Footer() {
@@ -27,11 +28,11 @@ export default function Footer() {
           <Link href="/">{siteMetadata.title}</Link>
         </div>
         <div className="mb-2 flex space-x-2 text-sm text-gray-500 dark:text-gray-400">
-          <Link href="/privacy">Privacy Policy</Link>
+          <Link href="/privacy">{dictionary.footer.privacyPolicy}</Link>
           <div>{` • `}</div>
-          <Link href="/terms">Terms of Service</Link>
+          <Link href="/terms">{dictionary.footer.termsOfService}</Link>
         </div>
-        <div className="mb-8 text-sm text-gray-500 dark:text-gray-400">All Rights Reserved</div>
+        <div className="mb-8 text-sm text-gray-500 dark:text-gray-400">{dictionary.footer.allRightsReserved}</div>
       </div>
     </footer>
   )

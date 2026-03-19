@@ -1,6 +1,7 @@
 'use client'
 
 import siteMetadata from '@/data/siteMetadata'
+import dictionary from '@/data/dictionary'
 import { useEffect, useState } from 'react'
 
 const ScrollTopAndComment = () => {
@@ -28,7 +29,7 @@ const ScrollTopAndComment = () => {
     >
       {siteMetadata.comments?.provider && (
         <button
-          aria-label="Scroll To Comment"
+          aria-label={dictionary.ui.scrollToComment}
           onClick={handleScrollToComment}
           className="rounded-full bg-gray-200 p-2 text-gray-500 transition-all hover:bg-gray-300 dark:bg-gray-700 dark:text-gray-400 dark:hover:bg-gray-600"
         >
@@ -42,7 +43,7 @@ const ScrollTopAndComment = () => {
         </button>
       )}
       <button
-        aria-label="Scroll To Top"
+        aria-label={dictionary.ui.scrollToTop}
         onClick={handleScrollTop}
         className="rounded-full bg-gray-200 p-2 text-gray-500 transition-all hover:bg-gray-300 dark:bg-gray-700 dark:text-gray-400 dark:hover:bg-gray-600"
       >

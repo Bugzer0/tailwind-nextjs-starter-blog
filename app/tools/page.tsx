@@ -1,7 +1,8 @@
 import toolsData from '@/data/toolsData'
+import dictionary from '@/data/dictionary'
 import { genPageMetadata } from 'app/seo'
 
-export const metadata = genPageMetadata({ title: 'Tools' })
+export const metadata = genPageMetadata({ title: dictionary.tools.title })
 
 export default function Tools() {
   return (
@@ -9,12 +10,10 @@ export default function Tools() {
       <div className="divide-y divide-gray-200 dark:divide-gray-700">
         <div className="space-y-2 pt-6 pb-8 md:space-y-5">
           <h1 className="text-3xl leading-9 font-extrabold tracking-tight text-gray-900 sm:text-4xl sm:leading-10 md:text-6xl md:leading-14 dark:text-gray-100">
-            Online Tools
+            {dictionary.tools.title}
           </h1>
           <p className="text-lg leading-7 text-gray-500 dark:text-gray-400">
-            Useful online tools that I deployed (some of them are developed by myself, not
-            necessarily all, though) for my personal use. Feel free to bookmark them and add them to
-            your toolkit!
+            {dictionary.tools.description}
           </p>
         </div>
         <div className="grid grid-cols-2 gap-4 pt-4">
@@ -39,7 +38,7 @@ export default function Tools() {
                     className="text-primary-500 hover:text-primary-600 dark:hover:text-primary-400 text-base leading-6 font-medium"
                     aria-label={`Link to ${tool.title}`}
                   >
-                    Use tool &rarr;
+                    {dictionary.tools.useTool} &rarr;
                   </a>
                 )}
               </div>
