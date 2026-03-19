@@ -2,6 +2,10 @@
 """
 AI Blog Post Generator using Google Gemini.
 Generates MDX blog posts with AI-generated images for a Next.js blog.
+
+Uses a 2-step approach to avoid JSON parsing issues:
+  Step 1: Generate metadata (title, summary, tags, image prompts) as JSON
+  Step 2: Generate full blog content as plain markdown text
 """
 
 import os
@@ -41,17 +45,16 @@ def sanitize_yaml_string(s: str) -> str:
     """Sanitize a string for safe use in YAML double-quoted scalar."""
     s = s.replace("\\", "\\\\")
     s = s.replace('"', '\\"')
-    # Collapse newlines to space (YAML double-quoted strings)
     s = s.replace("\r\n", " ").replace("\r", " ").replace("\n", " ")
     return s.strip()
 
 
-def retry_api_call(func, *args, **kwargs):
+def retry_api_call(func):
     """Retry an API call with exponential backoff."""
     last_error = None
     for attempt in range(MAX_RETRIES):
         try:
-            return func(*args, **kwargs)
+            return func()
         except Exception as e:
             last_error = e
             if attempt == MAX_RETRIES - 1:
@@ -60,86 +63,113 @@ def retry_api_call(func, *args, **kwargs):
             print(f"  ⚠ API call failed (attempt {attempt + 1}/{MAX_RETRIES}): {e}")
             print(f"  ⏳ Retrying in {wait}s...")
             time.sleep(wait)
-    # Should never reach here, but just in case
     raise last_error  # type: ignore[misc]
 
 
-def generate_blog_content(client, topic: str, skill_prompt: str) -> dict:
-    """Generate blog post content using Gemini."""
-    system_prompt = f"""You are a technical blog writer. Write high-quality, engaging blog posts.
+def generate_metadata(client, topic: str) -> dict:
+    """Step 1: Generate blog metadata as structured JSON (small, safe to parse)."""
+    response = retry_api_call(lambda: client.models.generate_content(
+        model="gemini-2.5-flash",
+        contents=f"Generate blog post metadata for the topic: {topic}",
+        config=types.GenerateContentConfig(
+            system_instruction="""Return ONLY a JSON object with blog post metadata. 
+Do NOT include the blog content itself.
 
-{skill_prompt}
-
-IMPORTANT: Return your response as valid JSON with this exact structure:
-{{
-  "title": "The blog post title",
-  "summary": "A 1-2 sentence summary for SEO",
+JSON structure:
+{
+  "title": "A compelling blog post title",
+  "summary": "A 1-2 sentence SEO summary (single line, no newlines)",
   "tags": ["tag1", "tag2"],
-  "content": "The full markdown content of the blog post (without frontmatter)",
-  "image_prompts": {{
-    "banner": "A detailed prompt to generate a banner/thumbnail image for this post. Describe a visually appealing, professional illustration.",
-    "inline": "A detailed prompt to generate an inline illustration that complements a key section of the post."
-  }}
-}}
+  "image_prompts": {
+    "banner": "Detailed prompt for a banner/thumbnail image",
+    "inline": "Detailed prompt for an inline illustration"
+  }
+}
 
 Rules:
-- Write in the same language as the topic provided
-- Content should be well-structured with headings (##, ###)
-- Include code examples where relevant
-- The content field should NOT include frontmatter (no --- block)
-- image_prompts should describe images that are relevant to the blog topic
-- Banner image should be eye-catching and represent the overall topic
-- Inline image should illustrate a specific concept from the post
-- Mark where the inline image should be placed by including exactly one line: {{INLINE_IMAGE}} in the content
-"""
-
-    def _call():
-        return client.models.generate_content(
-            model="gemini-2.5-flash",
-            contents=f"Write a blog post about: {topic}",
-            config=types.GenerateContentConfig(
-                system_instruction=system_prompt,
-                temperature=0.8,
-                response_mime_type="application/json",
-            ),
-        )
-
-    response = retry_api_call(_call)
+- Write title and summary in the same language as the topic
+- Tags should be lowercase English
+- image_prompts should describe professional, visually appealing illustrations
+- Keep summary under 200 characters
+- 1-3 tags maximum""",
+            temperature=0.7,
+            response_mime_type="application/json",
+        ),
+    ))
 
     if not response.text:
-        print("Error: Gemini returned empty response (possibly blocked by safety filter)")
+        print("Error: Gemini returned empty metadata response")
         sys.exit(1)
 
     try:
         data = json.loads(response.text)
     except json.JSONDecodeError:
-        print("Error: Failed to parse Gemini response as JSON")
-        print(f"Raw response: {response.text[:500]}")
+        print("Error: Failed to parse metadata JSON")
+        print(f"Raw: {response.text[:500]}")
         sys.exit(1)
 
-    # Validate required fields
-    required = ["title", "summary", "content"]
-    for field in required:
+    for field in ["title", "summary"]:
         if not data.get(field):
-            print(f"Error: Missing required field '{field}' in Gemini response")
+            print(f"Error: Missing required field '{field}'")
             sys.exit(1)
 
     return data
 
 
+def generate_content(client, topic: str, title: str, skill_prompt: str) -> str:
+    """Step 2: Generate blog content as plain markdown (no JSON wrapping)."""
+    response = retry_api_call(lambda: client.models.generate_content(
+        model="gemini-2.5-flash",
+        contents=f'Write a blog post titled "{title}" about: {topic}',
+        config=types.GenerateContentConfig(
+            system_instruction=f"""You are a technical blog writer.
+
+{skill_prompt}
+
+Write the blog post content in PLAIN MARKDOWN format.
+
+Rules:
+- Write in the same language as the topic
+- Do NOT include any frontmatter (no --- block)
+- Do NOT wrap in JSON or code fences
+- Use ## for main sections and ### for subsections
+- Include code examples where relevant (use proper markdown code blocks)
+- Place exactly one line containing only {{INLINE_IMAGE}} where an illustration would help
+- Start directly with the introduction paragraph (no title heading)
+- Minimum 800 words""",
+            temperature=0.8,
+        ),
+    ))
+
+    if not response.text:
+        print("Error: Gemini returned empty content response")
+        sys.exit(1)
+
+    content = response.text.strip()
+
+    # Strip wrapping code fences if Gemini added them
+    if content.startswith("```markdown"):
+        content = content[len("```markdown"):].strip()
+    if content.startswith("```md"):
+        content = content[len("```md"):].strip()
+    if content.startswith("```"):
+        content = content[3:].strip()
+    if content.endswith("```"):
+        content = content[:-3].strip()
+
+    return content
+
+
 def generate_image(client, prompt: str, output_path: Path) -> bool:
     """Generate an image using Gemini's image generation."""
     try:
-        def _call():
-            return client.models.generate_content(
-                model="gemini-2.0-flash-exp",
-                contents=f"Generate an image: {prompt}",
-                config=types.GenerateContentConfig(
-                    response_modalities=["IMAGE", "TEXT"],
-                ),
-            )
-
-        response = retry_api_call(_call)
+        response = retry_api_call(lambda: client.models.generate_content(
+            model="gemini-2.0-flash-exp",
+            contents=f"Generate an image: {prompt}",
+            config=types.GenerateContentConfig(
+                response_modalities=["IMAGE", "TEXT"],
+            ),
+        ))
 
         if not response.candidates:
             print("  ✗ No candidates in response (safety filter?)")
@@ -169,7 +199,7 @@ def generate_image(client, prompt: str, output_path: Path) -> bool:
         return False
 
 
-def create_blog_post(blog_data: dict, slug_name: str, images_generated: dict):
+def create_blog_post(metadata: dict, content: str, slug_name: str, images_generated: dict):
     """Create the MDX file with frontmatter and content."""
     today = datetime.now().strftime("%Y-%m-%d")
     image_dir = f"/static/images/{slug_name}"
@@ -180,12 +210,10 @@ def create_blog_post(blog_data: dict, slug_name: str, images_generated: dict):
         images_list.append(f"{image_dir}/banner.jpg")
 
     # Process content - replace inline image placeholder
-    content = blog_data["content"]
     if images_generated.get("inline") and "{INLINE_IMAGE}" in content:
         inline_img = f"\n![illustration]({image_dir}/inline.jpg)\n"
         content = content.replace("{INLINE_IMAGE}", inline_img)
     elif images_generated.get("inline"):
-        # If no placeholder, insert after first ## heading
         lines = content.split("\n")
         inserted = False
         for i, line in enumerate(lines):
@@ -197,12 +225,9 @@ def create_blog_post(blog_data: dict, slug_name: str, images_generated: dict):
         if inserted:
             content = "\n".join(lines)
 
-    # Escape title for YAML safety, flatten summary to single line
-    safe_title = sanitize_yaml_string(blog_data["title"])
-    safe_summary = sanitize_yaml_string(blog_data["summary"])
-
-    # Build tags and images as JSON arrays (valid YAML)
-    tags_str = json.dumps(blog_data.get("tags", ["ai-generated"]))
+    safe_title = sanitize_yaml_string(metadata["title"])
+    safe_summary = sanitize_yaml_string(metadata["summary"])
+    tags_str = json.dumps(metadata.get("tags", ["ai-generated"]))
     images_str = json.dumps(images_list)
 
     frontmatter = f'''---
@@ -235,54 +260,57 @@ def main():
     client = get_client()
     skill_prompt = load_skill()
 
-    # Step 1: Generate blog content
-    print("\n📝 Generating blog content...")
-    blog_data = generate_blog_content(client, topic, skill_prompt)
-    print(f"  ✓ Title: {blog_data['title']}")
-    print(f"  ✓ Tags: {blog_data.get('tags', [])}")
+    # Step 1: Generate metadata (JSON - small, safe to parse)
+    print("\n📋 Generating metadata...")
+    metadata = generate_metadata(client, topic)
+    print(f"  ✓ Title: {metadata['title']}")
+    print(f"  ✓ Tags: {metadata.get('tags', [])}")
 
-    # Step 2: Create slug from title
-    slug_name = slugify(blog_data["title"], max_length=60)
+    # Step 2: Generate content (plain markdown - no JSON parsing needed)
+    print("\n📝 Generating content...")
+    content = generate_content(client, topic, metadata["title"], skill_prompt)
+    word_count = len(content.split())
+    print(f"  ✓ Content generated ({word_count} words)")
+
+    # Step 3: Create slug
+    slug_name = slugify(metadata["title"], max_length=60)
     if not slug_name:
-        # Fallback slug from topic or timestamp
         slug_name = slugify(topic, max_length=60) or f"post-{datetime.now().strftime('%Y%m%d-%H%M%S')}"
     print(f"  ✓ Slug: {slug_name}")
 
-    # Step 3: Check for duplicate slug
+    # Step 4: Check for duplicate slug
     mdx_path = Path(f"data/blog/{slug_name}.mdx")
     if mdx_path.exists():
         slug_name = f"{slug_name}-{datetime.now().strftime('%Y%m%d')}"
         print(f"  ⚠ Slug already exists, using: {slug_name}")
 
-    # Step 4: Generate images
+    # Step 5: Generate images
     images_generated = {}
-    image_prompts = blog_data.get("image_prompts", {})
+    image_prompts = metadata.get("image_prompts", {})
+    image_dir = Path(f"public/static/images/{slug_name}")
 
     if image_prompts.get("banner"):
         print("\n🎨 Generating banner image...")
-        image_dir = Path(f"public/static/images/{slug_name}")
         images_generated["banner"] = generate_image(
             client, image_prompts["banner"], image_dir / "banner.jpg"
         )
 
     if image_prompts.get("inline"):
         print("🎨 Generating inline image...")
-        image_dir = Path(f"public/static/images/{slug_name}")
         images_generated["inline"] = generate_image(
             client, image_prompts["inline"], image_dir / "inline.jpg"
         )
 
-    # Step 5: Create MDX file
+    # Step 6: Create MDX file
     print("\n📄 Creating MDX file...")
-    created_path = create_blog_post(blog_data, slug_name, images_generated)
+    created_path = create_blog_post(metadata, content, slug_name, images_generated)
 
     # Output for GitHub Actions
     github_output = os.environ.get("GITHUB_OUTPUT")
     if github_output:
         with open(github_output, "a") as f:
             f.write(f"slug={slug_name}\n")
-            # Sanitize title: remove quotes, newlines, limit length
-            safe_title = blog_data["title"].replace('"', "").replace("'", "")
+            safe_title = metadata["title"].replace('"', "").replace("'", "")
             safe_title = safe_title.replace("\n", " ").replace("\r", "")[:80]
             f.write(f"title={safe_title}\n")
             f.write(f"mdx_path={created_path}\n")
