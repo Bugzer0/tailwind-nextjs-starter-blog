@@ -39,6 +39,7 @@ def get_client():
     api_key = os.environ.get("GEMINI_API_KEY")
     if not api_key:
         print("Error: GEMINI_API_KEY environment variable is required")
+        sys.stdout.flush()
         sys.exit(1)
     return genai.Client(api_key=api_key)
 
@@ -71,7 +72,9 @@ def retry_api_call(func):
                 raise
             wait = RETRY_DELAY * (2 ** attempt)
             print(f"  ⚠ API call failed (attempt {attempt + 1}/{MAX_RETRIES}): {e}")
+            sys.stdout.flush()
             print(f"  ⏳ Retrying in {wait}s...")
+            sys.stdout.flush()
             time.sleep(wait)
     raise last_error  # type: ignore[misc]
 
@@ -337,6 +340,8 @@ Rules:
 
 def generate_image(client, prompt: str, output_path: Path) -> bool:
     """Generate an image using Gemini's image generation model."""
+    print(f"  → Starting image generation: {output_path.name}")
+    sys.stdout.flush()
     try:
         response = retry_api_call(lambda: client.models.generate_content(
             model="gemini-3.1-flash-image-preview",
@@ -364,13 +369,18 @@ def generate_image(client, prompt: str, output_path: Path) -> bool:
                 output_path.parent.mkdir(parents=True, exist_ok=True)
                 image.save(str(output_path), "JPEG", quality=85)
                 print(f"  ✓ Image saved: {output_path}")
+                print(f"  ✓ Image size: {image.size}")
+                print(f"  ✓ Image mode: {image.mode}")
+                sys.stdout.flush()
                 return True
 
         print(f"  ✗ No image data in response for: {prompt[:80]}...")
+        print(f"  ✗ Response content: {response.text[:500]}")
         return False
 
     except Exception as e:
         print(f"  ✗ Image generation failed: {e}")
+        sys.stdout.flush()
         return False
 
 
@@ -448,6 +458,7 @@ images: {images_str}
     mdx_path.parent.mkdir(parents=True, exist_ok=True)
     mdx_path.write_text(mdx_content, encoding="utf-8")
     print(f"✓ Blog post created: {mdx_path}")
+    sys.stdout.flush()
     return mdx_path
 
 
@@ -458,49 +469,62 @@ images: {images_str}
 def main():
     print("🩺 GlucoAI Blog Generator — Glucose & Diabetes Health")
     print("=" * 60)
+    sys.stdout.flush()
 
     client = get_client()
     skill_prompt = load_skill()
 
     # Step 0: Scan existing posts
     print("\n🔍 Scanning existing blog posts...")
+    sys.stdout.flush()
     existing_posts = scan_existing_posts()
     existing_context = build_existing_posts_context(existing_posts)
     print(f"  ✓ Found {len(existing_posts)} existing posts")
+    sys.stdout.flush()
     for p in existing_posts:
         print(f"    • {p['title']}")
+    sys.stdout.flush()
 
     # Step 1: Get or generate topic
     topic = os.environ.get("BLOG_TOPIC", "").strip()
     if topic:
         print(f"\n📌 Using provided topic: {topic}")
+        sys.stdout.flush()
     else:
         print("\n🧠 Auto-generating a new unique topic...")
+        sys.stdout.flush()
         topic = generate_topic(client, existing_context, skill_prompt)
+        sys.stdout.flush()
 
     # Step 2: Generate metadata
     print("\n📋 Generating metadata...")
+    sys.stdout.flush()
     metadata = generate_metadata(client, topic, existing_context)
     print(f"  ✓ Title: {metadata['title']}")
     print(f"  ✓ Summary: {metadata['summary'][:100]}...")
     print(f"  ✓ Tags: {metadata.get('tags', [])}")
+    sys.stdout.flush()
 
     # Step 3: Generate content
     print("\n📝 Generating content...")
+    sys.stdout.flush()
     content = generate_content(client, topic, metadata["title"], skill_prompt, existing_context)
     word_count = len(content.split())
     print(f"  ✓ Content generated ({word_count} words)")
+    sys.stdout.flush()
 
     # Step 4: Create slug & check duplicates
     slug_name = slugify(metadata["title"], max_length=60)
     if not slug_name:
         slug_name = slugify(topic, max_length=60) or f"post-{datetime.now().strftime('%Y%m%d-%H%M%S')}"
     print(f"  ✓ Slug: {slug_name}")
+    sys.stdout.flush()
 
     mdx_path = BLOG_DIR / f"{slug_name}.mdx"
     if mdx_path.exists():
         slug_name = f"{slug_name}-{datetime.now().strftime('%Y%m%d')}"
         print(f"  ⚠ Slug already exists, using: {slug_name}")
+        sys.stdout.flush()
 
     # Step 5: Generate images
     images_generated = {}
@@ -509,30 +533,39 @@ def main():
 
     if image_prompts.get("banner"):
         print("\n🎨 Generating banner image...")
+        sys.stdout.flush()
         images_generated["banner"] = generate_image(
             client, image_prompts["banner"], image_dir / "banner.jpg"
         )
+        sys.stdout.flush()
 
     if image_prompts.get("inline1"):
         print("🎨 Generating inline image 1...")
+        sys.stdout.flush()
         images_generated["inline1"] = generate_image(
             client, image_prompts["inline1"], image_dir / "inline1.jpg"
         )
+        sys.stdout.flush()
 
     if image_prompts.get("inline2"):
         print("🎨 Generating inline image 2...")
+        sys.stdout.flush()
         images_generated["inline2"] = generate_image(
             client, image_prompts["inline2"], image_dir / "inline2.jpg"
         )
+        sys.stdout.flush()
 
     # Validate: warn if missing inline images
     inline_count = sum([bool(images_generated.get("inline1")), bool(images_generated.get("inline2"))])
     if inline_count < 2:
         print(f"  ⚠ Warning: Only {inline_count}/2 inline images generated successfully")
+        sys.stdout.flush()
 
     # Step 6: Create MDX file
     print("\n📄 Creating MDX file...")
+    sys.stdout.flush()
     created_path = create_blog_post(metadata, content, slug_name, images_generated)
+    sys.stdout.flush()
 
     # Output for GitHub Actions
     github_output = os.environ.get("GITHUB_OUTPUT")
@@ -546,6 +579,7 @@ def main():
 
     print("\n" + "=" * 60)
     print("✅ Done! New glucose/diabetes blog post created successfully.")
+    sys.stdout.flush()
 
 
 if __name__ == "__main__":

@@ -19,7 +19,7 @@ permissions:
 jobs:
   generate:
     runs-on: ubuntu-latest
-    timeout-minutes: 10
+    timeout-minutes: 20
     steps:
       - uses: actions/checkout@v4
 
@@ -37,7 +37,8 @@ jobs:
         env:
           GEMINI_API_KEY: ${{ secrets.GEMINI_API_KEY }}
           BLOG_TOPIC: ${{ inputs.topic }}
-        run: python scripts/ai-blog-generator/generate_post.py
+          PYTHONUNBUFFERED: 1
+        run: python -u scripts/ai-blog-generator/generate_post.py
 
       - name: Commit and push
         env:
