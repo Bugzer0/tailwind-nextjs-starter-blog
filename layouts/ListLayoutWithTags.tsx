@@ -138,7 +138,9 @@ export default function ListLayoutWithTags({
                             width={150}
                             height={150}
                             className="thumbnail-image"
-                            quality={50}
+                            quality={75}
+                            sizes="150px"
+                            loading="lazy"
                           />
                         </Link>
                       )}
@@ -157,7 +159,7 @@ export default function ListLayoutWithTags({
                               </Link>
                             </h2>
                             <div className="flex flex-wrap">
-                              {tags?.sort().map((tag) => <Tag key={tag} text={tag} />)}
+                              {tags?.sort().map((tag: string) => <Tag key={tag} text={tag} />)}
                             </div>
                           </div>
                           <div className="prose max-w-none text-gray-500 dark:text-gray-400">

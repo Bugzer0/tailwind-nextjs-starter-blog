@@ -1,3 +1,4 @@
+import { Suspense } from 'react'
 import { slug } from 'github-slugger'
 import { allCoreContent, sortPosts } from 'pliny/utils/contentlayer'
 import siteMetadata from '@/data/siteMetadata'
@@ -43,5 +44,9 @@ export default async function TagPage(props: { params: Promise<{ tag: string }> 
   if (filteredPosts.length === 0) {
     return notFound()
   }
-  return <ListLayout posts={filteredPosts} title={title} />
+  return (
+    <Suspense fallback={<div className="animate-pulse">Loading posts...</div>}>
+      <ListLayout posts={filteredPosts} title={title} />
+    </Suspense>
+  )
 }

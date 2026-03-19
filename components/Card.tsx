@@ -1,7 +1,14 @@
 import Image from './Image'
 import Link from './Link'
 
-const Card = ({ title, description, imgSrc, href }) => (
+interface CardProps {
+  title: string
+  description: string
+  imgSrc?: string
+  href?: string
+}
+
+const Card = ({ title, description, imgSrc, href }: CardProps) => (
   <div className="md max-w-[544px] p-4 md:w-1/2">
     <div
       className={`${
@@ -17,6 +24,8 @@ const Card = ({ title, description, imgSrc, href }) => (
               className="bg-white object-cover object-center md:h-36 lg:h-48"
               width={544}
               height={306}
+              sizes="(max-width: 768px) 100vw, 50vw"
+              loading="lazy"
             />
           </Link>
         ) : (
@@ -26,6 +35,8 @@ const Card = ({ title, description, imgSrc, href }) => (
             className="bg-white object-cover object-center md:h-36 lg:h-48"
             width={544}
             height={306}
+            sizes="(max-width: 768px) 100vw, 50vw"
+            loading="lazy"
           />
         ))}
       <div className="p-6">

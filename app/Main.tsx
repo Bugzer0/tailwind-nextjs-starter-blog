@@ -4,10 +4,16 @@ import Tag from '@/components/Tag'
 import siteMetadata from '@/data/siteMetadata'
 import { formatDate } from 'pliny/utils/formatDate'
 import NewsletterForm from 'pliny/ui/NewsletterForm'
+import { CoreContent } from 'pliny/utils/contentlayer'
+import type { Blog } from 'contentlayer/generated'
 
 const MAX_DISPLAY = 5
 
-export default function Home({ posts }) {
+interface HomeProps {
+  posts: CoreContent<Blog>[]
+}
+
+export default function Home({ posts }: HomeProps) {
   return (
     <>
       <div className="divide-y divide-gray-200 dark:divide-gray-700">
@@ -47,9 +53,11 @@ export default function Home({ posts }) {
                               src={images[0]}
                               alt={title}
                               className="thumbnail-image"
-                              width="220"
-                              height="220"
-                              quality="95"
+                              width={220}
+                              height={220}
+                              quality={80}
+                              sizes="220px"
+                              loading="lazy"
                             />
                           )}
                         </Link>
@@ -70,7 +78,7 @@ export default function Home({ posts }) {
                             <time dateTime={date}>{formatDate(date, siteMetadata.locale)}</time>
                           </div>
                           <div className="flex flex-wrap">
-                            {tags.map((tag) => (
+                            {tags.map((tag: string) => (
                               <Tag key={tag} text={tag} />
                             ))}
                           </div>
