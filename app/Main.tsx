@@ -31,7 +31,7 @@ export default function Home({ posts }: HomeProps) {
           {siteMetadata.newsletter?.provider && (
             <div className="mx-2 my-12 flex w-[288px] items-center justify-center sm:w-[400px] md:w-[550px]">
               <div className="flex items-center justify-center">
-                <NewsletterForm title={dictionary.home.newsletterTitle} />
+                <NewsletterForm title={dictionary.home.newsletterTitle} apiUrl="/api/newsletter/" />
               </div>
             </div>
           )}

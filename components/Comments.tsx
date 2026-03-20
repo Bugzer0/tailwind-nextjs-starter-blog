@@ -8,6 +8,9 @@ import dictionary from '@/data/dictionary'
 export default function Comments({ slug }: { slug: string }) {
   const [loadComments, setLoadComments] = useState(process.env.NODE_ENV === 'production')
 
+  // Temporarily disable comments
+  return null
+
   if (!siteMetadata.comments?.provider) {
     return null
   }

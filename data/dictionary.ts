@@ -135,7 +135,7 @@ const dictionary = {
   // Site metadata
   site: {
     description:
-      'Blog sharing knowledge about blood glucose management, diabetes, and metabolic health',
+      'Practical, evidence-based glucose & metabolic health insights',
   },
 } as const
 
