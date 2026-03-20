@@ -14,7 +14,7 @@ const projectsData: Project[] = [
   },
   {
     title: 'Metabolic Health Blog',
-    description: `Blog sharing in-depth knowledge about diabetes management, nutrition, CGM technology, and healthy living. Updated daily with expert articles, app reviews, practical guides, and success stories from the community.`,
+    description: `Practical, evidence-based glucose & metabolic health insights`,
     imgSrc: '/static/images/blog-logo.png',
     href: 'https://glucoai.app/blog',
   },

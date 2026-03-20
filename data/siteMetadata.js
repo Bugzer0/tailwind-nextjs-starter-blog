@@ -3,7 +3,7 @@ const siteMetadata = {
   title: `GlucoAI's blog`,
   author: 'GlucoAI',
   headerTitle: 'GlucoAI',
-  description: `Blog sharing knowledge about blood glucose management, diabetes, and metabolic health`,
+  description: `Practical, evidence-based glucose & metabolic health insights`,
   language: 'en',
   theme: 'system',
   siteUrl: 'https://glucoai.app',
