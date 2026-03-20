@@ -54,6 +54,13 @@ yarn build:debug      # Build với debug info
 
 ---
 
+1. Chạy TypeScript Check
+
+npx tsc --noEmit
+
+Khuyến nghị: Chạy yarn build trước khi push lên Cloudflare Pages để đảm bảo không có lỗi build.
+yarn build
+
 ## 🔧 Cấu hình ban đầu
 
 ### 1. Cấu hình site metadata

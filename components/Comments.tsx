@@ -16,8 +16,8 @@ export default function Comments({ slug }: { slug: string }) {
   }
   return (
     <>
-      {loadComments ? (
-        <CommentsComponent commentsConfig={siteMetadata.comments} slug={slug} />
+      {loadComments && siteMetadata.comments ? (
+        <CommentsComponent commentsConfig={siteMetadata.comments!} slug={slug} />
       ) : (
         <button onClick={() => setLoadComments(true)}>{dictionary.comments.loadComments}</button>
       )}

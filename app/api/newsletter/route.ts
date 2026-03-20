@@ -13,10 +13,7 @@ export async function POST(req: Request) {
 
     if (!API_KEY || !PUBLICATION_ID) {
       console.error('Missing Beehiiv credentials')
-      return NextResponse.json(
-        { error: 'Server configuration error' },
-        { status: 500 }
-      )
+      return NextResponse.json({ error: 'Server configuration error' }, { status: 500 })
     }
 
     const API_URL = `https://api.beehiiv.com/v2/publications/${PUBLICATION_ID}/subscriptions`
@@ -53,10 +50,10 @@ export async function POST(req: Request) {
       { message: 'Successfully subscribed to the newsletter' },
       { status: 201 }
     )
-  } catch (error: any) {
+  } catch (error: unknown) {
     console.error('Newsletter subscription error:', error)
     return NextResponse.json(
-      { error: error.message || 'Internal server error' },
+      { error: error instanceof Error ? error.message : 'Internal server error' },
       { status: 500 }
     )
   }

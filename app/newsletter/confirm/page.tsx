@@ -6,7 +6,7 @@ export default function NewsletterConfirmPage() {
   return (
     <SectionContainer>
       <div className="divide-y divide-gray-200 dark:divide-gray-700">
-        <div className="space-y-2 pb-8 pt-6 md:space-y-5">
+        <div className="space-y-2 pt-6 pb-8 md:space-y-5">
           <PageTitle>Newsletter Subscription Confirmed</PageTitle>
         </div>
         <div className="py-12">
@@ -57,13 +57,13 @@ export default function NewsletterConfirmPage() {
           <div className="mt-8 flex flex-col items-center justify-center gap-4 sm:flex-row">
             <Link
               href="/"
-              className="inline-flex w-full items-center justify-center rounded-md bg-primary-500 px-6 py-3 text-base font-medium text-white hover:bg-primary-600 dark:bg-primary-600 dark:text-white dark:hover:bg-primary-500 sm:w-48"
+              className="bg-primary-500 hover:bg-primary-600 dark:bg-primary-600 dark:hover:bg-primary-500 inline-flex w-full items-center justify-center rounded-md px-6 py-3 text-base font-medium text-white sm:w-48 dark:text-white"
             >
               Back to Home
             </Link>
             <Link
               href="/blog"
-              className="inline-flex w-full items-center justify-center rounded-md border-2 border-gray-300 bg-white px-6 py-3 text-base font-medium text-gray-700 hover:border-primary-500 hover:text-primary-500 dark:border-gray-600 dark:bg-gray-800 dark:text-gray-300 dark:hover:border-primary-400 dark:hover:text-primary-400 sm:w-48"
+              className="hover:border-primary-500 hover:text-primary-500 dark:hover:border-primary-400 dark:hover:text-primary-400 inline-flex w-full items-center justify-center rounded-md border-2 border-gray-300 bg-white px-6 py-3 text-base font-medium text-gray-700 sm:w-48 dark:border-gray-600 dark:bg-gray-800 dark:text-gray-300"
             >
               Read Latest Posts
             </Link>
