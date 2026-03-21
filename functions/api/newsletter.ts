@@ -4,16 +4,48 @@
 interface Env {
   BEEHIIV_API_KEY: string
   BEEHIIV_PUBLICATION_ID: string
+  ALLOWED_ORIGINS?: string
+}
+
+interface NewsletterRequest {
+  email: string
+}
+
+interface BeeHiivErrorResponse {
+  message?: string
+  errors?: Array<{ message: string }>
+}
+
+// Email validation regex (RFC 5322 simplified)
+const EMAIL_REGEX = /^[^\s@]+@[^\s@]+\.[^\s@]+$/
+
+// Sanitize email to prevent injection
+function sanitizeEmail(email: string): string {
+  return email.trim().toLowerCase()
+}
+
+// Validate email format
+function isValidEmail(email: string): boolean {
+  return EMAIL_REGEX.test(email) && email.length <= 254
 }
 
 export async function onRequestPost(context: { request: Request; env: Env }) {
   const { request, env } = context
 
-  // Handle CORS
+  // Get allowed origins from env or use default
+  const allowedOrigins = env.ALLOWED_ORIGINS 
+    ? env.ALLOWED_ORIGINS.split(',').map(o => o.trim())
+    : ['https://glucoai.app', 'https://glucoai.pages.dev']
+  
+  const origin = request.headers.get('Origin') || ''
+  const isAllowedOrigin = allowedOrigins.includes(origin) || origin.includes('.pages.dev')
+
+  // Handle CORS with specific origins
   const corsHeaders = {
-    'Access-Control-Allow-Origin': '*',
+    'Access-Control-Allow-Origin': isAllowedOrigin ? origin : allowedOrigins[0],
     'Access-Control-Allow-Methods': 'POST, OPTIONS',
     'Access-Control-Allow-Headers': 'Content-Type',
+    'Access-Control-Max-Age': '86400',
   }
 
   // Handle preflight request
@@ -22,10 +54,33 @@ export async function onRequestPost(context: { request: Request; env: Env }) {
   }
 
   try {
-    const { email } = await request.json()
+    // Parse request body
+    let body: NewsletterRequest
+    try {
+      body = await request.json()
+    } catch {
+      return new Response(JSON.stringify({ error: 'Invalid request body' }), {
+        status: 400,
+        headers: { 'Content-Type': 'application/json', ...corsHeaders },
+      })
+    }
 
-    if (!email) {
+    const { email } = body
+
+    // Validate email presence
+    if (!email || typeof email !== 'string') {
       return new Response(JSON.stringify({ error: 'Email is required' }), {
+        status: 400,
+        headers: { 'Content-Type': 'application/json', ...corsHeaders },
+      })
+    }
+
+    // Sanitize email
+    const sanitizedEmail = sanitizeEmail(email)
+
+    // Validate email format
+    if (!isValidEmail(sanitizedEmail)) {
+      return new Response(JSON.stringify({ error: 'Invalid email format' }), {
         status: 400,
         headers: { 'Content-Type': 'application/json', ...corsHeaders },
       })
@@ -51,23 +106,29 @@ export async function onRequestPost(context: { request: Request; env: Env }) {
         Authorization: `Bearer ${API_KEY}`,
       },
       body: JSON.stringify({
-        email,
+        email: sanitizedEmail,
         reactivate_existing: false,
         send_welcome_email: true,
       }),
     })
 
-    const data = await response.json()
+    const data: BeeHiivErrorResponse = await response.json()
 
+    // Log without sensitive data
     console.log('Beehiiv API Response:', {
       status: response.status,
-      statusText: response.statusText,
-      data,
+      success: response.ok,
+      email: sanitizedEmail.replace(/(.{2}).*(@.*)/, '$1***$2'), // Mask email
     })
 
     if (!response.ok) {
+      const errorMessage = 
+        data.message || 
+        (data.errors && data.errors[0]?.message) ||
+        'Failed to subscribe'
+      
       return new Response(
-        JSON.stringify({ error: data.message || 'Failed to subscribe' }),
+        JSON.stringify({ error: errorMessage }),
         {
           status: response.status,
           headers: { 'Content-Type': 'application/json', ...corsHeaders },
@@ -83,10 +144,15 @@ export async function onRequestPost(context: { request: Request; env: Env }) {
       }
     )
   } catch (error: unknown) {
-    console.error('Newsletter subscription error:', error)
+    // Log error without exposing details to client
+    console.error('Newsletter subscription error:', {
+      name: error instanceof Error ? error.name : 'Unknown',
+      message: error instanceof Error ? error.message : 'Unknown error',
+    })
+    
     return new Response(
       JSON.stringify({
-        error: error instanceof Error ? error.message : 'Internal server error',
+        error: 'An error occurred while processing your request. Please try again later.',
       }),
       {
         status: 500,
