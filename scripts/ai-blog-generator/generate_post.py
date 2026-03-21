@@ -26,6 +26,18 @@ from google import genai
 from google.genai import types
 from PIL import Image
 import io
+import requests
+
+# Load environment variables from .env.local for local development
+try:
+    from dotenv import load_dotenv
+    # Look for .env.local in project root
+    env_path = Path(__file__).resolve().parent.parent.parent / ".env.local"
+    if env_path.exists():
+        load_dotenv(dotenv_path=env_path)
+except ImportError:
+    # dotenv not installed, skip (GitHub Actions uses secrets directly)
+    pass
 
 MAX_RETRIES = 3
 RETRY_DELAY = 5  # seconds
@@ -399,6 +411,72 @@ def generate_image(client, prompt: str, output_path: Path, aspect_ratio: str = "
 # Step 5: Create MDX file
 # ---------------------------------------------------------------------------
 
+def send_telegram_notification(title: str, slug: str, tags: list = None, word_count: int = 0) -> bool:
+    """Send a Telegram notification when a new blog post is created.
+    
+    Args:
+        title: Blog post title
+        slug: Blog post slug
+        tags: List of tags (optional)
+        word_count: Word count of the post (optional)
+        
+    Returns:
+        True if notification sent successfully, False otherwise
+    """
+    bot_token = os.environ.get("TELEGRAM_BOT_TOKEN", "").strip()
+    chat_id = os.environ.get("TELEGRAM_CHAT_ID", "").strip()
+    
+    if not bot_token or not chat_id:
+        print("  ⚠ Telegram credentials not configured (TELEGRAM_BOT_TOKEN or TELEGRAM_CHAT_ID missing)")
+        return False
+    
+    try:
+        # Build message with additional info
+        message_parts = [
+            "📝 *New blog post created!*",
+            "",
+            f"📌 *Title:* {title}",
+            f"🔗 *Slug:* `{slug}`"
+        ]
+        
+        if word_count > 0:
+            message_parts.append(f"📊 *Words:* {word_count}")
+        
+        if tags:
+            tags_str = ", ".join(tags)
+            message_parts.append(f"🏷 *Tags:* {tags_str}")
+        
+        message = "\n".join(message_parts)
+        
+        url = f"https://api.telegram.org/bot{bot_token}/sendMessage"
+        payload = {
+            "chat_id": chat_id,
+            "text": message,
+            "parse_mode": "Markdown"
+        }
+        
+        response = requests.post(url, json=payload, timeout=10)
+        
+        if response.status_code == 200:
+            print("  ✓ Telegram notification sent successfully")
+            sys.stdout.flush()
+            return True
+        else:
+            print(f"  ✗ Failed to send Telegram notification: {response.status_code}")
+            print(f"  Response: {response.text[:200]}")
+            sys.stdout.flush()
+            return False
+            
+    except requests.exceptions.RequestException as e:
+        print(f"  ✗ Network error sending Telegram notification: {e}")
+        sys.stdout.flush()
+        return False
+    except Exception as e:
+        print(f"  ✗ Error sending Telegram notification: {e}")
+        sys.stdout.flush()
+        return False
+
+
 def create_blog_post(metadata: dict, content: str, slug_name: str, images_generated: dict):
     """Create the MDX file with frontmatter and content."""
     today = datetime.now().strftime("%Y-%m-%dT%H:%M:%S")
@@ -599,6 +677,16 @@ def main():
             f.write(f"title={safe_title}\n")
             f.write(f"mdx_path={created_path}\n")
 
+    # Step 7: Send Telegram notification
+    print("\n📱 Sending Telegram notification...")
+    sys.stdout.flush()
+    send_telegram_notification(
+        title=metadata["title"],
+        slug=slug_name,
+        tags=metadata.get("tags", []),
+        word_count=word_count
+    )
+    
     print("\n" + "=" * 60)
     print("✅ Done! New glucose/diabetes blog post created successfully.")
     sys.stdout.flush()

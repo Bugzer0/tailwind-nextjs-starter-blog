@@ -9,9 +9,9 @@ on:
         required: false
         type: string
 
-  # Chạy tự động theo lịch (mỗi ngày lúc 8h sáng UTC+7 = 1h UTC)
-  # schedule:
-  #   - cron: '0 1 * * *'
+  # Chạy tự động theo lịch (mỗi ngày lúc 6h sáng UTC+7 = 23h UTC đêm trước)
+  schedule:
+    - cron: '0 23 * * *'
 
 permissions:
   contents: write
@@ -36,6 +36,8 @@ jobs:
         id: generate
         env:
           GEMINI_API_KEY: ${{ secrets.GEMINI_API_KEY }}
+          TELEGRAM_BOT_TOKEN: ${{ secrets.TELEGRAM_BOT_TOKEN }}
+          TELEGRAM_CHAT_ID: ${{ secrets.TELEGRAM_CHAT_ID }}
           BLOG_TOPIC: ${{ inputs.topic }}
           PYTHONUNBUFFERED: 1
         run: python -u scripts/ai-blog-generator/generate_post.py
