@@ -142,12 +142,18 @@ Click **"Add variable"** và thêm:
 | `EXPORT`       | `1`   |
 | `UNOPTIMIZED`  | `1`   |
 | `NODE_VERSION` | `20`  |
+| `BEEHIIV_API_KEY` | `your_beehiiv_api_key` |
+| `BEEHIIV_PUBLICATION_ID` | `your_beehiiv_publication_id` |
 
 **Giải thích:**
 
 - `EXPORT=1`: Bật static export mode
 - `UNOPTIMIZED=1`: Tắt image optimization (Cloudflare có CDN riêng)
 - `NODE_VERSION=20`: Sử dụng Node.js 20
+- `BEEHIIV_API_KEY`: API key từ [Beehiiv](https://app.beehiiv.com/settings/integrations)
+- `BEEHIIV_PUBLICATION_ID`: Publication ID từ Beehiiv
+
+**Lưu ý:** Thay `your_beehiiv_api_key` và `your_beehiiv_publication_id` bằng giá trị thực tế từ `.env.local` của bạn
 
 ### 4.4. Hoàn tất setup
 
