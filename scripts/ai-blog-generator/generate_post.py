@@ -448,11 +448,17 @@ def create_blog_post(metadata: dict, content: str, slug_name: str, images_genera
     content = content.replace("<!-- INLINE_IMAGE_2 -->", "")
     content = content.replace("<!-- INLINE_IMAGE -->", "")
     content = content.replace("{INLINE_IMAGE}", "")
+    
+    # Fix spacing issues: ensure only 1 blank line before inline images (not 2+)
+    # This prevents "cannot end with a space or control character" errors in Next.js
+    content = re.sub(r'\n\n\n+(!\[.*?\]\(/static/images/.*?\))', r'\n\n\1', content)
 
     safe_title = sanitize_yaml_string(metadata["title"])
     safe_summary = sanitize_yaml_string(metadata["summary"])
     tags_str = json.dumps(metadata.get("tags", ["ai-generated"]))
-    images_str = json.dumps(images_list)
+    images_list = [f"/static/images/{slug_name}/banner.jpg"]
+    # Use YAML array format instead of JSON to avoid parsing errors
+    images_yaml = "\n".join([f"  - {img}" for img in images_list])
 
     frontmatter = f'''---
 title: "{safe_title}"
@@ -461,14 +467,15 @@ summary: |
 tags: {tags_str}
 date: {today}
 draft: false
-images: {images_str}
+images:
+{images_yaml}
 ---'''
 
     mdx_content = f"{frontmatter}\n\n{content}\n"
 
     mdx_path = BLOG_DIR / f"{slug_name}.mdx"
     mdx_path.parent.mkdir(parents=True, exist_ok=True)
-    mdx_path.write_text(mdx_content, encoding="utf-8")
+    mdx_path.write_text(mdx_content, encoding="utf-8", newline='\n')
     print(f"✓ Blog post created: {mdx_path}")
     sys.stdout.flush()
     return mdx_path
