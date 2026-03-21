@@ -24,7 +24,7 @@ export default function Home({ posts }: HomeProps) {
             <h1 className="text-2xl leading-8 font-extrabold tracking-tight text-gray-900 sm:text-3xl sm:leading-9 md:text-4xl md:leading-10 dark:text-gray-100">
               {dictionary.home.latestPosts}
             </h1>
-            <p className="truncate text-lg leading-7 text-gray-500 dark:text-gray-400">
+            <p className="text-base leading-7 text-gray-500 dark:text-gray-400 sm:text-lg">
               {dictionary.home.description}
             </p>
           </div>
