@@ -1,7 +1,7 @@
 import Link from '@/components/Link'
 import dictionary from '@/data/dictionary'
 
-const APP_STORE_URL = 'https://apps.apple.com/us/app/blood-sugar-monitor-glucoai/id6751217849'
+const APP_STORE_URL = 'https://bit.ly/glucoai'
 
 export default function AppBanner() {
   return (

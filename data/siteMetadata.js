@@ -12,7 +12,7 @@ const siteMetadata = {
   socialBanner: `${process.env.BASE_PATH || ''}/static/images/twitter-card.png`,
   email: 'clxteam47@gmail.com',
   github: 'https://github.com/glucoai',
-  x: 'https://twitter.com/glucoai',
+  x: 'https://x.com/',
   linkedin: 'https://linkedin.com/in/glucoai',
   locale: 'en-US',
   stickyNav: false,

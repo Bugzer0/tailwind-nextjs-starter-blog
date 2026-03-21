@@ -9,7 +9,7 @@ import NewsletterForm from 'pliny/ui/NewsletterForm'
 import { CoreContent } from 'pliny/utils/contentlayer'
 import type { Blog } from 'contentlayer/generated'
 
-const MAX_DISPLAY = 5
+const MAX_DISPLAY = 7
 
 interface HomeProps {
   posts: CoreContent<Blog>[]

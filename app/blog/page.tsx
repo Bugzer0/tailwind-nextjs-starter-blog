@@ -5,7 +5,7 @@ import dictionary from '@/data/dictionary'
 import { genPageMetadata } from 'app/seo'
 import ListLayout from '@/layouts/ListLayoutWithTags'
 
-const POSTS_PER_PAGE = 5
+const POSTS_PER_PAGE = 7
 
 export const metadata = genPageMetadata({ title: dictionary.nav.blog })
 

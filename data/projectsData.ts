@@ -10,7 +10,7 @@ const projectsData: Project[] = [
     title: 'GlucoAI App',
     description: `Smart blood glucose management app powered by AI, helping diabetics track glucose, A1C, insulin, and nutrition. Integrates with popular CGM devices like Dexcom and FreeStyle Libre. Analyzes trends and provides personalized suggestions for better blood glucose control.`,
     imgSrc: '/static/images/glucoai-app-logo.png',
-    href: 'https://apps.apple.com/app/glucoai',
+    href: 'https://bit.ly/glucoai',
   },
   {
     title: 'Metabolic Health Blog',
