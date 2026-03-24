@@ -9,8 +9,9 @@ on:
         required: false
         type: string
 
-  # Chạy tự động theo lịch (mỗi ngày lúc 6h sáng UTC+7 = 23h UTC đêm trước)
+  # Chạy tự động theo lịch (UTC+7: 5h sáng = 22h UTC, 6h sáng = 23h UTC)
   schedule:
+    - cron: '0 22 * * *'
     - cron: '0 23 * * *'
 
 permissions:
