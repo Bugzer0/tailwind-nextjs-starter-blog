@@ -1,7 +1,7 @@
 import Link from '@/components/Link'
 import dictionary from '@/data/dictionary'
 
-const APP_STORE_URL = 'https://bit.ly/glucoai'
+const APP_STORE_URL = 'https://rebrand.ly/531f37'
 
 export default function AppBanner() {
   return (
