@@ -53,4 +53,5 @@ jobs:
           git diff --cached --quiet && echo "No changes to commit" && exit 0
           TITLE="${POST_TITLE:-AI generated glucose/diabetes post}"
           git commit -m "🩺 New blog post: ${TITLE}"
+          git pull --rebase origin main
           git push
