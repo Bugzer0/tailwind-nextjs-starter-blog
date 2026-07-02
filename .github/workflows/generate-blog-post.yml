@@ -11,7 +11,7 @@ on:
 
   # Chạy tự động theo lịch (UTC+7: 5h sáng = 22h UTC, 6h sáng = 23h UTC)
   schedule:
-    - cron: '0 5 * * *'
+    - cron: '30 5 * * 1,3,5'
     # - cron: '0 6 * * *'
 
 permissions:
